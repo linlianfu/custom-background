@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>me.zhengjie</groupId>
-    <artifactId>eladmin</artifactId>
+    <artifactId>custom-background</artifactId>
     <packaging>pom</packaging>
     <version>1.1</version>
 
@@ -17,7 +17,7 @@
         <module>eladmin-generator</module>
     </modules>
 
-    <name>ELADMIN 后台管理</name>
+    <name>Custom 后台管理</name>
     <url>https://eladmin.vip</url>
 
     <parent>
