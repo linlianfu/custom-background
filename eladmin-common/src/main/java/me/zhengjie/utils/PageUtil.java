@@ -16,6 +16,8 @@
 package me.zhengjie.utils;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+
 import java.util.*;
 
 /**
@@ -66,5 +68,9 @@ public class PageUtil extends cn.hutool.core.util.PageUtil {
      */
     public static <T> PageResult<T> toPage(List<T> list, long totalElements) {
         return new PageResult<>(list, totalElements);
+    }
+
+    public static <T> Page<T> toDbPageCriteria(long current, long size,T t){
+        return new Page(current, size);
     }
 }

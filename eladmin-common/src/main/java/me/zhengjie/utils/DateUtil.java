@@ -30,6 +30,36 @@ public class DateUtil {
 
     public static final DateTimeFormatter DFY_MD_HMS = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     public static final DateTimeFormatter DFY_MD = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final int PATTEN_TO_DAY = 1;
+    private static final int PATTEN_TO_SECOND = 2;
+    private static final int PATTEN_TO_MONTH = 3;
+
+    /**
+     * 新增转换到[秒]的具体格式的方法
+     *
+     * @param date
+     * @return
+     */
+    public static String formatSecond(Date date) {
+        if (date == null) {
+            return null;
+        }
+        return localDateTimeFormat(toLocalDateTime(date),DFY_MD_HMS);
+    }
+
+    /**
+     * 新增转换到[秒]的具体格式的方法
+     *
+     * @param date
+     * @return
+     */
+    public static Date formatSecond(String date) {
+        if (date == null) {
+            return null;
+        }
+        return toDate(LocalDateTime.parse(date));
+    }
+
 
     /**
      * LocalDateTime 转时间戳

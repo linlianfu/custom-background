@@ -10,6 +10,7 @@ import me.zhengjie.modules.system.domain.Job;
 import me.zhengjie.modules.system.domain.vo.JobQueryCriteria;
 import me.zhengjie.modules.theme.domain.Theme;
 import me.zhengjie.modules.theme.domain.vo.ThemeQueryCriteria;
+import me.zhengjie.modules.theme.domain.vo.ThemeVo;
 import me.zhengjie.modules.theme.service.ThemeService;
 import me.zhengjie.utils.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,8 @@ import javax.annotation.security.PermitAll;
  */
 @Slf4j
 @RestController
-@Api(tags = "主题管理：风险主题")
-@RequestMapping("/api/theme/tort")
+@Api(tags = "主题管理：主题管理")
+@RequestMapping("/api/theme")
 public class ThemeController {
 
     @Autowired
@@ -38,10 +39,9 @@ public class ThemeController {
         log.info("=================ThemeController  初始化================");
     }
 
-    @ApiOperation("查询风险主题")
+    @ApiOperation("主题分页")
     @GetMapping(value = "/page")
-    @PreAuthorize("@el.check('job:list','user:list')")
-    public ResponseEntity<PageResult<Theme>> queryTrotTheme(ThemeQueryCriteria criteria, Page<Object> page){
+    public ResponseEntity<PageResult<ThemeVo>> queryTheme(ThemeQueryCriteria criteria, Page<Object> page){
         return new ResponseEntity<>(service.queryAll(criteria, page), HttpStatus.OK);
     }
 
