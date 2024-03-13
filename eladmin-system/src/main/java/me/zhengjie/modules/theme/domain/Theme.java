@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 主题管理
@@ -58,5 +59,5 @@ public class Theme implements Serializable {
 
     @TableField(value = "th_create_time")
     @ApiModelProperty(value = "创建时间")
-    private String createTime;
+    private Date createTime;
 }

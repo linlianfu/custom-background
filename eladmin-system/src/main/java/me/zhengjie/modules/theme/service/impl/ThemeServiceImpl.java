@@ -2,18 +2,24 @@ package me.zhengjie.modules.theme.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.modules.theme.domain.Theme;
 import me.zhengjie.modules.theme.domain.vo.ThemeQueryCriteria;
+import me.zhengjie.modules.theme.domain.vo.ThemeRequest;
 import me.zhengjie.modules.theme.domain.vo.ThemeVo;
 import me.zhengjie.modules.theme.mapper.ThemeMapper;
 import me.zhengjie.modules.theme.service.ThemeService;
 import me.zhengjie.utils.ModelMapperUtils;
 import me.zhengjie.utils.PageResult;
 import me.zhengjie.utils.PageUtil;
+import me.zhengjie.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.Set;
 
 
 /**
@@ -32,5 +38,25 @@ public class ThemeServiceImpl implements ThemeService {
         Page<Theme> dbPage = new Page<>(page.getCurrent(), page.getSize());
         dbPage = themeMapper.selectPage(dbPage, Wrappers.lambdaQuery(Theme.class));
         return PageUtil.toPage(ModelMapperUtils.mapList(dbPage.getRecords(),ThemeVo.class),dbPage.getTotal());
+    }
+
+    @Override
+    public boolean create(ThemeRequest request) {
+        Theme entity = new Theme();
+        entity.setName(request.getName());
+        entity.setKeyword(request.getKeyword());
+        entity.setCategoryId(request.getCategoryId());
+        entity.setTortType(request.getTortType());
+        entity.setFlow(request.getFlow());
+        entity.setRemark(request.getRemark());
+        entity.setCreateTime(new Date());
+        entity.setCreatedId(SecurityUtils.getCurrentUserId()+"");
+        themeMapper.insert(entity);
+        return true;
+    }
+
+    @Override
+    public void delete(Set<String> ids) {
+        themeMapper.deleteBatchIds(ids);
     }
 }
