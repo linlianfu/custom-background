@@ -2,6 +2,8 @@ package me.zhengjie.modules.theme.service;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.IService;
+import me.zhengjie.modules.store.domain.Store;
 import me.zhengjie.modules.system.domain.Job;
 import me.zhengjie.modules.system.domain.vo.JobQueryCriteria;
 import me.zhengjie.modules.theme.domain.Theme;
@@ -15,7 +17,7 @@ import java.util.Set;
 /**
  * @author eleven
  */
-public interface ThemeService {
+public interface ThemeService  extends IService<Theme> {
     /**
      * 分页查询
      *
@@ -31,6 +33,12 @@ public interface ThemeService {
      * @return
      */
     boolean create(ThemeRequest request);
+    /**
+     * 创建按主题
+     * @param request
+     * @return
+     */
+    boolean update(ThemeRequest request);
 
     /**
      * 删除

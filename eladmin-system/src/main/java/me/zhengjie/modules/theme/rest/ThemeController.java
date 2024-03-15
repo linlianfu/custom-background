@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.annotation.Log;
+import me.zhengjie.modules.store.domain.Store;
 import me.zhengjie.modules.system.domain.Job;
 import me.zhengjie.modules.system.domain.vo.JobQueryCriteria;
 import me.zhengjie.modules.theme.domain.Theme;
@@ -23,6 +24,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -57,6 +59,15 @@ public class ThemeController {
     public ResponseEntity<Object> create(@Validated @RequestBody ThemeRequest request){
         service.create(request);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PutMapping
+    @Log("修改Theme")
+    @ApiOperation("修改Theme")
+    @PreAuthorize("@el.check('theme:edit')")
+    public ResponseEntity<Object> updateStore(@Validated @RequestBody ThemeRequest resources){
+        service.update(resources);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @Log("删除主题")

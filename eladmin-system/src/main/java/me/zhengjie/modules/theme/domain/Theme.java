@@ -1,5 +1,7 @@
 package me.zhengjie.modules.theme.domain;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -11,6 +13,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import me.zhengjie.base.BaseEntity;
+import me.zhengjie.modules.store.domain.Store;
+import me.zhengjie.modules.theme.domain.vo.ThemeRequest;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -60,4 +64,8 @@ public class Theme implements Serializable {
     @TableField(value = "th_create_time")
     @ApiModelProperty(value = "创建时间")
     private Date createTime;
+
+    public void copy(ThemeRequest source){
+        BeanUtil.copyProperties(source,this, CopyOptions.create().setIgnoreNullValue(true));
+    }
 }
