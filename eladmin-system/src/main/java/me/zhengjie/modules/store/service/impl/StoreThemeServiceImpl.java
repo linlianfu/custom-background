@@ -15,6 +15,7 @@
  */
 package me.zhengjie.modules.store.service.impl;
 
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import me.zhengjie.modules.store.domain.Store;
 import me.zhengjie.modules.store.domain.StoreTheme;
@@ -54,9 +55,9 @@ public class StoreThemeServiceImpl extends ServiceImpl<StoreThemeMapper, StoreTh
 
     private final StoreThemeMapper storeThemeMapper;
 
-    private StoreMapper storeMapper;
+    private final StoreMapper storeMapper;
 
-    private ThemeMapper themeMapper;
+    private final ThemeMapper themeMapper;
 
     @Override
     public PageResult<StoreThemeVo> pageStoreTheme(StoreThemeQueryCriteria criteria, Page<Object> page){
@@ -64,6 +65,11 @@ public class StoreThemeServiceImpl extends ServiceImpl<StoreThemeMapper, StoreTh
         Page<StoreTheme> dbPage = new Page<>(page.getCurrent(), page.getSize());
         dbPage = storeThemeMapper.selectPage(dbPage, Wrappers.lambdaQuery(StoreTheme.class));
         List<StoreThemeVo> storeThemeList = ModelMapperUtils.mapList(dbPage.getRecords(), StoreThemeVo.class);
+
+        if (CollectionUtils.isEmpty(storeThemeList)) {
+            return PageUtil.toPage(storeThemeList,dbPage.getTotal());
+        }
+
         List<String> storeIdList = storeThemeList.stream().map(StoreThemeVo::getStoreId).collect(Collectors.toList());
         List<String> themeIdList = storeThemeList.stream().map(StoreThemeVo::getThemeId).collect(Collectors.toList());
 
