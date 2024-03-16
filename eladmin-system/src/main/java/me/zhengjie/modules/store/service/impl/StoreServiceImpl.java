@@ -33,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 import me.zhengjie.utils.PageUtil;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import me.zhengjie.utils.PageResult;
@@ -63,7 +64,7 @@ public class StoreServiceImpl extends ServiceImpl<StoreMapper, Store> implements
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void create(Store resources) {
-        resources.setCreateTime(LocalDate.now());
+        resources.setCreateTime(LocalDateTime.now());
         resources.setCreateId(SecurityUtils.getCurrentUserId()+"");
         save(resources);
     }

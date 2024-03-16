@@ -25,6 +25,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -87,7 +88,7 @@ public class Store implements Serializable {
 
     @TableField(value = "st_create_time")
     @ApiModelProperty(value = "创建时间")
-    private LocalDate createTime;
+    private LocalDateTime createTime;
 
     @TableField(value = "st_create_id")
     @ApiModelProperty(value = "创建人")

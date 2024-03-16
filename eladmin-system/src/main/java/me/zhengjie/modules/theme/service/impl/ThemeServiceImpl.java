@@ -34,7 +34,6 @@ import java.util.Set;
 @CacheConfig(cacheNames = "theme")
 public class ThemeServiceImpl extends ServiceImpl<ThemeMapper, Theme> implements ThemeService {
 
-    @Autowired
     private ThemeMapper themeMapper;
 
     @Override
