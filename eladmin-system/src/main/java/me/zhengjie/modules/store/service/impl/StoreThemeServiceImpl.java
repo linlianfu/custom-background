@@ -31,6 +31,7 @@ import me.zhengjie.modules.store.service.StoreThemeService;
 import me.zhengjie.modules.store.domain.vo.StoreThemeQueryCriteria;
 import me.zhengjie.modules.store.mapper.StoreThemeMapper;
 import me.zhengjie.utils.ModelMapperUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import me.zhengjie.utils.PageUtil;
@@ -55,8 +56,10 @@ public class StoreThemeServiceImpl extends ServiceImpl<StoreThemeMapper, StoreTh
 
     private final StoreThemeMapper storeThemeMapper;
 
+    @Autowired
     private final StoreMapper storeMapper;
 
+    @Autowired
     private final ThemeMapper themeMapper;
 
     @Override
