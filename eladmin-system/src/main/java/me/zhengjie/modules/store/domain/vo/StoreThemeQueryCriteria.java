@@ -27,4 +27,6 @@ public class StoreThemeQueryCriteria{
     @ApiModelProperty(value = "侵权类型")
     private Integer tortType;
 
+    @ApiModelProperty(value = "知识产权名称")
+    private String intellectualPropertyName;
 }

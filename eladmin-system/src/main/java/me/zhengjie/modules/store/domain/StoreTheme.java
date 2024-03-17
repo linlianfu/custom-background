@@ -15,21 +15,19 @@
  */
 package me.zhengjie.modules.store.domain;
 
-import cn.hutool.core.annotation.Link;
-import com.baomidou.mybatisplus.annotation.TableField;
-import lombok.Data;
 import cn.hutool.core.bean.BeanUtil;
-import io.swagger.annotations.ApiModelProperty;
 import cn.hutool.core.bean.copier.CopyOptions;
-import java.sql.Timestamp;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import me.zhengjie.modules.store.domain.vo.Tort;
+import me.zhengjie.modules.store.domain.vo.TortType;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import me.zhengjie.modules.store.domain.vo.Tort;
-import me.zhengjie.modules.store.domain.vo.TortType;
 
 /**
  * @description /
@@ -77,6 +75,14 @@ public class StoreTheme implements Serializable {
     @TableField("sth_tort_time")
     @ApiModelProperty(value = "侵权时间")
     private LocalDateTime tortTime;
+
+    @TableField("sth_intellectual_property_name")
+    @ApiModelProperty(value = "知识产权名称")
+    private String intellectualPropertyName;
+
+    @TableField("sth_remark")
+    @ApiModelProperty(value = "备注")
+    private String remark;
 
     @TableField("sth_create_id")
     @ApiModelProperty(value = "创建人")

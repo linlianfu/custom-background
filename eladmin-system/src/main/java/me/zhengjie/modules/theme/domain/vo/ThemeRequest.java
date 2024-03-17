@@ -28,7 +28,7 @@ public class ThemeRequest {
 
     @NotNull(message = "请选择风险等级")
     @ApiModelProperty(value = "风险等级 | 1、常规主题  2、一般侵权 3、资金冻结 4、严重侵权")
-    private Integer tortType;
+    private Integer riskType;
 
     @NotNull(message = "请选择流量等级")
     @ApiModelProperty(value = "流量等级 | 1、常规主题 2、爆款主题")

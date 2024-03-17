@@ -17,14 +17,10 @@ package me.zhengjie.modules.store.domain.vo;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -71,6 +67,12 @@ public class StoreThemeVo implements Serializable {
 
     @ApiModelProperty(value = "侵权时间")
     private LocalDateTime tortTime;
+
+    @ApiModelProperty(value = "知识产权名称")
+    private String intellectualPropertyName;
+
+    @ApiModelProperty(value = "备注")
+    private String remark;
 
     @ApiModelProperty(value = "创建人")
     private String createId;

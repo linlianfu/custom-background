@@ -1,8 +1,5 @@
 package me.zhengjie.modules.theme.domain.vo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -24,8 +21,11 @@ public class ThemeVo {
     @ApiModelProperty(value = "主题分类")
     private String categoryId;
 
+    /**
+     * @see me.zhengjie.modules.store.domain.vo.RiskType
+     */
     @ApiModelProperty(value = "风险等级 | 1、常规主题  2、一般侵权 3、资金冻结 4、严重侵权")
-    private int tortType;
+    private int riskType;
 
     @ApiModelProperty(value = "流量等级 | 1、常规主题 2、爆款主题")
     private int flow;

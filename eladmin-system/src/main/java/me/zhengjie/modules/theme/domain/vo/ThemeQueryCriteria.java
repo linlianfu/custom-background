@@ -19,9 +19,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
-import java.util.List;
-
 /**
 * @author Zheng Jie
 * @date 2019-6-4 14:49:34
@@ -40,10 +37,10 @@ public class ThemeQueryCriteria {
     private String categoryId;
 
     /**
-     * @see me.zhengjie.modules.store.domain.vo.TortType
+     * @see me.zhengjie.modules.store.domain.vo.RiskType
      */
     @ApiModelProperty(value = "风险等级 | 1、常规主题  2、一般侵权 3、资金冻结 4、严重侵权")
-    private Integer tortType;
+    private Integer riskType;
 
     @ApiModelProperty(value = "流量等级 | 1、常规主题 2、爆款主题")
     private Integer flow;

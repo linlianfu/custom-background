@@ -6,17 +6,9 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import me.zhengjie.base.BaseEntity;
-import me.zhengjie.modules.store.domain.Store;
 import me.zhengjie.modules.theme.domain.vo.ThemeRequest;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -45,9 +37,12 @@ public class Theme implements Serializable {
     @ApiModelProperty(value = "主题分类")
     private String categoryId;
 
-    @TableField(value = "th_tort_type")
+    /**
+     * @see me.zhengjie.modules.store.domain.vo.RiskType
+     */
+    @TableField(value = "th_risk_type")
     @ApiModelProperty(value = "风险等级 | 1、常规主题  2、一般侵权 3、资金冻结 4、严重侵权")
-    private int tortType;
+    private int riskType;
 
     @TableField(value = "th_flow")
     @ApiModelProperty(value = "流量等级 | 1、普通 2、爆款")

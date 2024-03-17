@@ -1,14 +1,10 @@
 package me.zhengjie.modules.theme.service.impl;
 
-import com.alibaba.druid.wall.WallProvider;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import me.zhengjie.modules.store.domain.Store;
-import me.zhengjie.modules.store.mapper.StoreMapper;
 import me.zhengjie.modules.theme.domain.Theme;
 import me.zhengjie.modules.theme.domain.vo.ThemeQueryCriteria;
 import me.zhengjie.modules.theme.domain.vo.ThemeRequest;
@@ -21,7 +17,6 @@ import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.SecurityUtils;
 import me.zhengjie.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,8 +44,8 @@ public class ThemeServiceImpl extends ServiceImpl<ThemeMapper, Theme> implements
         if (StringUtils.isNotBlank(criteria.getKeyword())){
             wrapper.like(Theme::getKeyword,criteria.getKeyword());
         }
-        if (criteria.getTortType() != null){
-            wrapper.eq(Theme::getTortType,criteria.getTortType());
+        if (criteria.getRiskType() != null){
+            wrapper.eq(Theme::getRiskType,criteria.getRiskType());
         }
         dbPage = themeMapper.selectPage(
                 dbPage, wrapper.orderByDesc(Theme::getCreateTime)
@@ -64,7 +59,7 @@ public class ThemeServiceImpl extends ServiceImpl<ThemeMapper, Theme> implements
         entity.setName(request.getName());
         entity.setKeyword(request.getKeyword());
         entity.setCategoryId(request.getCategoryId());
-        entity.setTortType(request.getTortType());
+        entity.setRiskType(request.getRiskType());
         entity.setFlow(request.getFlow());
         entity.setRemark(request.getRemark());
         entity.setCreateTime(new Date());
