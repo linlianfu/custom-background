@@ -15,6 +15,7 @@
  */
 package me.zhengjie.modules.store.domain.vo;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -23,4 +24,10 @@ import lombok.Data;
  **/
 @Data
 public class StoreQueryCriteria{
+
+    @ApiModelProperty(value = "店铺名称")
+    private String storeName;
+
+    @ApiModelProperty(value = "店铺状态 | 1：运营  2、退出运营")
+    private Integer status;
 }

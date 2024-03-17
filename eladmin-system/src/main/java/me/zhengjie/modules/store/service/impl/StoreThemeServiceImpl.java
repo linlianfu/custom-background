@@ -15,6 +15,7 @@
  */
 package me.zhengjie.modules.store.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import me.zhengjie.modules.store.domain.Store;
@@ -31,10 +32,14 @@ import me.zhengjie.modules.store.service.StoreThemeService;
 import me.zhengjie.modules.store.domain.vo.StoreThemeQueryCriteria;
 import me.zhengjie.modules.store.mapper.StoreThemeMapper;
 import me.zhengjie.utils.ModelMapperUtils;
+import me.zhengjie.utils.SecurityUtils;
+import me.zhengjie.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import me.zhengjie.utils.PageUtil;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.io.IOException;
@@ -54,7 +59,8 @@ import me.zhengjie.utils.PageResult;
 @RequiredArgsConstructor
 public class StoreThemeServiceImpl extends ServiceImpl<StoreThemeMapper, StoreTheme> implements StoreThemeService {
 
-    private final StoreThemeMapper storeThemeMapper;
+    @Autowired
+    private StoreThemeMapper storeThemeMapper;
 
     @Autowired
     private final StoreMapper storeMapper;
@@ -66,7 +72,19 @@ public class StoreThemeServiceImpl extends ServiceImpl<StoreThemeMapper, StoreTh
     public PageResult<StoreThemeVo> pageStoreTheme(StoreThemeQueryCriteria criteria, Page<Object> page){
 
         Page<StoreTheme> dbPage = new Page<>(page.getCurrent(), page.getSize());
-        dbPage = storeThemeMapper.selectPage(dbPage, Wrappers.lambdaQuery(StoreTheme.class));
+        LambdaQueryWrapper<StoreTheme> wrapper = Wrappers.lambdaQuery(StoreTheme.class);
+        if (StringUtils.isNotBlank(criteria.getStoreId())){
+            wrapper.eq(StoreTheme::getStoreId,criteria.getStoreId());
+        }
+        if (StringUtils.isNotBlank(criteria.getThemeId())){
+            wrapper.eq(StoreTheme::getThemeId,criteria.getThemeId());
+        }
+        if (criteria.getTortType() != null){
+            wrapper.eq(StoreTheme::getTortType,criteria.getTortType());
+        }
+        dbPage = storeThemeMapper.selectPage(
+                dbPage, wrapper.orderByDesc(StoreTheme::getCreateTime)
+        );
         List<StoreThemeVo> storeThemeList = ModelMapperUtils.mapList(dbPage.getRecords(), StoreThemeVo.class);
 
         if (CollectionUtils.isEmpty(storeThemeList)) {
@@ -95,6 +113,8 @@ public class StoreThemeServiceImpl extends ServiceImpl<StoreThemeMapper, StoreTh
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void create(StoreTheme resources) {
+        resources.setCreateId(SecurityUtils.getCurrentUserId().toString());
+        resources.setCreateTime(LocalDateTime.now());
         save(resources);
     }
 

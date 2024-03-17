@@ -32,7 +32,6 @@ public class StoreController {
     @GetMapping
     @Log("查询Store")
     @ApiOperation("查询Store")
-    @PreAuthorize("@el.check('store:list')")
     public ResponseEntity<PageResult<Store>> pageStore(StoreQueryCriteria criteria, Page<Object> page){
         return new ResponseEntity<>(storeService.pageStore(criteria,page),HttpStatus.OK);
     }
@@ -40,7 +39,6 @@ public class StoreController {
     @PostMapping
     @Log("新增Store")
     @ApiOperation("新增Store")
-    @PreAuthorize("@el.check('store:add')")
     public ResponseEntity<Object> createStore(@Validated @RequestBody Store resources){
         storeService.create(resources);
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -49,7 +47,6 @@ public class StoreController {
     @PutMapping
     @Log("修改Store")
     @ApiOperation("修改Store")
-    @PreAuthorize("@el.check('store:edit')")
     public ResponseEntity<Object> updateStore(@Validated @RequestBody Store resources){
         storeService.update(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -58,7 +55,6 @@ public class StoreController {
     @DeleteMapping
     @Log("删除Store")
     @ApiOperation("删除Store")
-    @PreAuthorize("@el.check('store:del')")
     public ResponseEntity<Object> deleteStore(@RequestBody List<String> ids) {
         storeService.deleteAll(ids);
         return new ResponseEntity<>(HttpStatus.OK);

@@ -32,8 +32,6 @@ public class StoreThemeController {
 
     @GetMapping
     @Log("查询StoreTheme")
-    @ApiOperation("查询StoreTheme")
-    @PreAuthorize("@el.check('storeTheme:list')")
     public ResponseEntity<PageResult<StoreThemeVo>> pageStoreTheme(StoreThemeQueryCriteria criteria, Page<Object> page){
         return new ResponseEntity<>(storeThemeService.pageStoreTheme(criteria,page),HttpStatus.OK);
     }
@@ -41,7 +39,6 @@ public class StoreThemeController {
     @PostMapping
     @Log("新增StoreTheme")
     @ApiOperation("新增StoreTheme")
-    @PreAuthorize("@el.check('storeTheme:add')")
     public ResponseEntity<Object> createStoreTheme(@Validated @RequestBody StoreTheme resources){
         storeThemeService.create(resources);
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -50,7 +47,6 @@ public class StoreThemeController {
     @PutMapping
     @Log("修改StoreTheme")
     @ApiOperation("修改StoreTheme")
-    @PreAuthorize("@el.check('storeTheme:edit')")
     public ResponseEntity<Object> updateStoreTheme(@Validated @RequestBody StoreTheme resources){
         storeThemeService.update(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -59,7 +55,6 @@ public class StoreThemeController {
     @DeleteMapping
     @Log("删除StoreTheme")
     @ApiOperation("删除StoreTheme")
-    @PreAuthorize("@el.check('storeTheme:del')")
     public ResponseEntity<Object> deleteStoreTheme(@RequestBody List<String> ids) {
         storeThemeService.deleteAll(ids);
         return new ResponseEntity<>(HttpStatus.OK);

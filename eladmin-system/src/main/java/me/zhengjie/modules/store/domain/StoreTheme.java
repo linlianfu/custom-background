@@ -15,6 +15,7 @@
  */
 package me.zhengjie.modules.store.domain;
 
+import cn.hutool.core.annotation.Link;
 import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 import cn.hutool.core.bean.BeanUtil;
@@ -27,6 +28,8 @@ import java.time.LocalDateTime;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import me.zhengjie.modules.store.domain.vo.Tort;
+import me.zhengjie.modules.store.domain.vo.TortType;
 
 /**
  * @description /
@@ -51,23 +54,29 @@ public class StoreTheme implements Serializable {
 
     @TableField("sth_up_time")
     @ApiModelProperty(value = "上架时间")
-    private Timestamp upTime;
+    private LocalDate upTime;
 
     @TableField("sth_product_count")
     @ApiModelProperty(value = "上架产品数量")
     private Integer productCount;
 
+    /**
+     * @see Tort
+     */
     @TableField("sth_tort")
     @ApiModelProperty(value = "是否侵权")
     private Integer tort;
 
+    /**
+     * @see TortType
+     */
     @TableField("sth_tort_type")
     @ApiModelProperty(value = "侵权类型")
     private Integer tortType;
 
     @TableField("sth_tort_time")
     @ApiModelProperty(value = "侵权时间")
-    private Timestamp tortTime;
+    private LocalDateTime tortTime;
 
     @TableField("sth_create_id")
     @ApiModelProperty(value = "创建人")

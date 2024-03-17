@@ -15,6 +15,7 @@
  */
 package me.zhengjie.modules.store.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import me.zhengjie.modules.store.domain.Store;
 import me.zhengjie.modules.theme.domain.Theme;
@@ -28,6 +29,8 @@ import me.zhengjie.modules.store.domain.vo.StoreQueryCriteria;
 import me.zhengjie.modules.store.mapper.StoreMapper;
 import me.zhengjie.utils.ModelMapperUtils;
 import me.zhengjie.utils.SecurityUtils;
+import me.zhengjie.utils.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import me.zhengjie.utils.PageUtil;
@@ -47,12 +50,22 @@ import me.zhengjie.utils.PageResult;
 @RequiredArgsConstructor
 public class StoreServiceImpl extends ServiceImpl<StoreMapper, Store> implements StoreService {
 
-    private final StoreMapper storeMapper;
+    @Autowired
+    private StoreMapper storeMapper;
 
     @Override
     public PageResult<Store> pageStore(StoreQueryCriteria criteria, Page<Object> page){
         Page<Store> dbPage = new Page<>(page.getCurrent(), page.getSize());
-        dbPage = storeMapper.selectPage(dbPage, Wrappers.lambdaQuery(Store.class));
+        LambdaQueryWrapper<Store> wrapper = Wrappers.lambdaQuery(Store.class);
+        if (StringUtils.isNotBlank(criteria.getStoreName())){
+            wrapper.like(Store::getStoreName,criteria.getStoreName());
+        }
+        if (criteria.getStatus() != null){
+            wrapper.eq(Store::getStatus,criteria.getStatus());
+        }
+        dbPage = storeMapper.selectPage(
+                dbPage, wrapper.orderByDesc(Store::getCreateTime)
+        );
         return PageUtil.toPage(ModelMapperUtils.mapList(dbPage.getRecords(), Store.class),dbPage.getTotal());
     }
 

@@ -1,5 +1,7 @@
 package me.zhengjie.modules.theme.service.impl;
 
+import com.alibaba.druid.wall.WallProvider;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -17,6 +19,7 @@ import me.zhengjie.utils.ModelMapperUtils;
 import me.zhengjie.utils.PageResult;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.SecurityUtils;
+import me.zhengjie.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -31,15 +34,27 @@ import java.util.Set;
  */
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "theme")
 public class ThemeServiceImpl extends ServiceImpl<ThemeMapper, Theme> implements ThemeService {
 
+    @Autowired
     private ThemeMapper themeMapper;
 
     @Override
     public PageResult<ThemeVo> queryAll(ThemeQueryCriteria criteria, Page<Object> page) {
         Page<Theme> dbPage = new Page<>(page.getCurrent(), page.getSize());
-        dbPage = themeMapper.selectPage(dbPage, Wrappers.lambdaQuery(Theme.class));
+        LambdaQueryWrapper<Theme> wrapper = Wrappers.lambdaQuery(Theme.class);
+        if (StringUtils.isNotBlank(criteria.getName())){
+            wrapper.like(Theme::getName,criteria.getName());
+        }
+        if (StringUtils.isNotBlank(criteria.getKeyword())){
+            wrapper.like(Theme::getKeyword,criteria.getKeyword());
+        }
+        if (criteria.getTortType() != null){
+            wrapper.eq(Theme::getTortType,criteria.getTortType());
+        }
+        dbPage = themeMapper.selectPage(
+                dbPage, wrapper.orderByDesc(Theme::getCreateTime)
+        );
         return PageUtil.toPage(ModelMapperUtils.mapList(dbPage.getRecords(),ThemeVo.class),dbPage.getTotal());
     }
 

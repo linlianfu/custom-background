@@ -25,6 +25,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -51,19 +52,25 @@ public class StoreThemeVo implements Serializable {
     private String themeName;
 
     @ApiModelProperty(value = "上架时间")
-    private Timestamp upTime;
+    private LocalDate upTime;
 
     @ApiModelProperty(value = "上架产品数量")
     private Integer productCount;
 
+    /**
+     * @see Tort
+     */
     @ApiModelProperty(value = "是否侵权")
     private Integer tort;
 
+    /**
+     * @see TortType
+     */
     @ApiModelProperty(value = "侵权类型")
     private Integer tortType;
 
     @ApiModelProperty(value = "侵权时间")
-    private Timestamp tortTime;
+    private LocalDateTime tortTime;
 
     @ApiModelProperty(value = "创建人")
     private String createId;

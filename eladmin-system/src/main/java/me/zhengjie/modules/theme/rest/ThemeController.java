@@ -64,7 +64,6 @@ public class ThemeController {
     @PutMapping
     @Log("修改Theme")
     @ApiOperation("修改Theme")
-    @PreAuthorize("@el.check('theme:edit')")
     public ResponseEntity<Object> updateStore(@Validated @RequestBody ThemeRequest resources){
         service.update(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
