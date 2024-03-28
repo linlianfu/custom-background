@@ -46,13 +46,6 @@ public interface StoreThemeService extends IService<StoreTheme> {
     StoreThemeVo getStoreTheme(String id);
 
     /**
-     * 查询所有数据不分页
-     * @param criteria 条件参数
-     * @return List<StoreThemeDto>
-     */
-    List<StoreTheme> queryAll(StoreThemeQueryCriteria criteria);
-
-    /**
      * 创建
      * @param resources /
      */

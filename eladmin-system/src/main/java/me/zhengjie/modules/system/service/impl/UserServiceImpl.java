@@ -26,11 +26,13 @@ import me.zhengjie.modules.security.service.OnlineUserService;
 import me.zhengjie.modules.security.service.UserCacheManager;
 import me.zhengjie.modules.system.domain.Job;
 import me.zhengjie.modules.system.domain.Role;
+import me.zhengjie.modules.system.domain.RoleConstant;
 import me.zhengjie.modules.system.domain.User;
 import me.zhengjie.modules.system.domain.vo.UserQueryCriteria;
 import me.zhengjie.modules.system.mapper.UserJobMapper;
 import me.zhengjie.modules.system.mapper.UserMapper;
 import me.zhengjie.modules.system.mapper.UserRoleMapper;
+import me.zhengjie.modules.system.service.RoleService;
 import me.zhengjie.modules.system.service.UserService;
 import me.zhengjie.utils.CacheKey;
 import me.zhengjie.utils.FileUtil;
@@ -43,6 +45,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -75,6 +78,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private final RedisUtils redisUtils;
     private final UserCacheManager userCacheManager;
     private final OnlineUserService onlineUserService;
+    private final RoleService roleService;
 
     @Override
     public PageResult<User> queryAll(UserQueryCriteria criteria, Page<Object> page) {
@@ -224,6 +228,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Transactional(rollbackFor = Exception.class)
     public void resetPwd(Set<Long> ids, String pwd) {
         userMapper.resetPwd(ids, pwd);
+    }
+
+    @Override
+    public boolean currentUserSuperRole() {
+        List<Role> roleList = roleService.findByUsersId(SecurityUtils.getCurrentUserId());
+        if (CollectionUtils.isEmpty(roleList))
+            return false;
+        return roleList.stream().anyMatch(p->RoleConstant.SUPER_ROLE.equals(p.getId()));
     }
 
     @Override

@@ -20,10 +20,14 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
+import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.store.domain.Store;
+import me.zhengjie.modules.store.domain.StoreTheme;
 import me.zhengjie.modules.store.domain.vo.StoreQueryCriteria;
 import me.zhengjie.modules.store.mapper.StoreMapper;
+import me.zhengjie.modules.store.mapper.StoreThemeMapper;
 import me.zhengjie.modules.store.service.StoreService;
+import me.zhengjie.modules.system.service.UserService;
 import me.zhengjie.utils.ModelMapperUtils;
 import me.zhengjie.utils.PageResult;
 import me.zhengjie.utils.PageUtil;
@@ -47,11 +51,18 @@ public class StoreServiceImpl extends ServiceImpl<StoreMapper, Store> implements
 
     @Autowired
     private StoreMapper storeMapper;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private StoreThemeMapper storeThemeMapper;
 
     @Override
     public PageResult<Store> pageStore(StoreQueryCriteria criteria, Page<Object> page){
         Page<Store> dbPage = new Page<>(page.getCurrent(), page.getSize());
         LambdaQueryWrapper<Store> wrapper = Wrappers.lambdaQuery(Store.class);
+        if (!userService.currentUserSuperRole()){
+            wrapper.eq(Store::getCreateId,SecurityUtils.getCurrentUserId());
+        }
         if (StringUtils.isNotBlank(criteria.getStoreName())){
             wrapper.like(Store::getStoreName,criteria.getStoreName());
         }
@@ -88,6 +99,19 @@ public class StoreServiceImpl extends ServiceImpl<StoreMapper, Store> implements
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteAll(List<String> ids) {
+        verification(ids);
         removeBatchByIds(ids);
+    }
+
+    /**
+     * 验证是否有引用关系
+     * @return
+     */
+    public void verification(List<String> idList){
+        Long count = storeThemeMapper.selectCount(Wrappers.lambdaQuery(StoreTheme.class)
+                .in(StoreTheme::getStoreId, idList)
+        );
+        if (count >0)
+            throw new BadRequestException("店铺有登记主题，无法删除");
     }
 }

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
+import me.zhengjie.modules.system.service.UserService;
 import me.zhengjie.modules.theme.domain.Theme;
 import me.zhengjie.modules.theme.domain.vo.ThemeQueryCriteria;
 import me.zhengjie.modules.theme.domain.vo.ThemeRequest;
@@ -33,11 +34,15 @@ public class ThemeServiceImpl extends ServiceImpl<ThemeMapper, Theme> implements
 
     @Autowired
     private ThemeMapper themeMapper;
-
+    @Autowired
+    private UserService userService;
     @Override
     public PageResult<ThemeVo> queryAll(ThemeQueryCriteria criteria, Page<Object> page) {
         Page<Theme> dbPage = new Page<>(page.getCurrent(), page.getSize());
         LambdaQueryWrapper<Theme> wrapper = Wrappers.lambdaQuery(Theme.class);
+        if (!userService.currentUserSuperRole()){
+            wrapper.eq(Theme::getCreateId,SecurityUtils.getCurrentUserId());
+        }
         if (StringUtils.isNotBlank(criteria.getName())){
             wrapper.like(Theme::getName,criteria.getName());
         }
@@ -63,7 +68,7 @@ public class ThemeServiceImpl extends ServiceImpl<ThemeMapper, Theme> implements
         entity.setFlow(request.getFlow());
         entity.setRemark(request.getRemark());
         entity.setCreateTime(new Date());
-        entity.setCreatedId(SecurityUtils.getCurrentUserId()+"");
+        entity.setCreateId(SecurityUtils.getCurrentUserId());
         save(entity);
         return true;
     }

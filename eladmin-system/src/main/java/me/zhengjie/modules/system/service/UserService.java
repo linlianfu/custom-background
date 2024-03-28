@@ -134,4 +134,11 @@ public interface UserService extends IService<User> {
      * @param pwd 密码
      */
     void resetPwd(Set<Long> ids, String pwd);
+
+
+    /**
+     * 判断当前登录用户是否是超级超级管理员
+     * @return
+     */
+    boolean currentUserSuperRole();
 }

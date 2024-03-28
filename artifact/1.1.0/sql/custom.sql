@@ -46,6 +46,7 @@ ALTER TABLE sys_users_roles MODIFY user_id varchar(32);
 ALTER TABLE sys_users_roles MODIFY role_id varchar(32);
 ALTER TABLE sys_users_jobs MODIFY user_id varchar(32);
 ALTER TABLE sys_roles_menus MODIFY role_id varchar(32);
+ALTER TABLE cb_store_theme MODIFY sth_create_id varchar(32);
 
 update sys_user set user_id = '2d0e5908df3811e8a4ec2afb6e36c22c' where user_id = 1;
 update sys_role set role_id = '53af3b61e02711e8a4ec2afb6e36c22c' where role_id = 1;

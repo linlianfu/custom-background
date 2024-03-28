@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="me.zhengjie.modules.store.mapper.StoreThemeMapper">
+    <resultMap id="BaseResultMap" type="me.zhengjie.modules.store.domain.StoreThemeDetail">
+        <id column="id" property="id"/>
+        <result column="sth_st_id" property="storeId"/>
+        <result column="sth_th_id" property="themeId"/>
+        <result column="sth_up_time" property="upTime"/>
+        <result column="sth_product_count" property="productCount"/>
+        <result column="sth_tort" property="tort"/>
+        <result column="sth_tort_type" property="tortType"/>
+        <result column="sth_tort_time" property="tortTime"/>
+        <result column="sth_intellectual_property_name" property="intellectualPropertyName"/>
+        <result column="sth_remark" property="remark"/>
+        <result column="sth_create_id" property="createId"/>
+        <result column="sth_create_time" property="createTime"/>
+        <result column="st_store_name" property="storeName"/>
+        <result column="th_name" property="themeName"/>
+        <result column="th_risk_type" property="riskType"/>
+    </resultMap>
+
+    <sql id="Where_sql">
+        <where>
+            <if test="criteria.storeId != null ">
+                and sth_st_id = #{criteria.storeId}
+            </if>
+            <if test="criteria.tortType != null ">
+                and sth_tort_type = #{criteria.tortType}
+            </if>
+            <if test="criteria.riskType != null ">
+                and th.th_risk_type = #{criteria.riskType}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(criteria.createId)">
+                and sth_create_id = #{criteria.createId}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(criteria.themeId)">
+                and sth_th_id = #{criteria.themeId}
+            </if>
+        </where>
+    </sql>
+
+    <select id="pageStoreTheme" resultMap="BaseResultMap">
+        SELECT
+        sth.*,
+        st.st_store_name,
+        th.th_name,
+        th.th_risk_type
+        FROM
+        cb_store_theme sth
+        LEFT JOIN cb_store st ON sth.sth_st_id = st.st_id
+        LEFT JOIN cb_theme th ON sth.sth_th_id = th.th_id
+        <include refid="Where_sql"/>
+        order by sth_create_time desc
+    </select>
+</mapper>

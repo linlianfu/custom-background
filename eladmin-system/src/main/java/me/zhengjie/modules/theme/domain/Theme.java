@@ -54,7 +54,7 @@ public class Theme implements Serializable {
 
     @TableField(value = "th_create_id")
     @ApiModelProperty(value = "创建人")
-    private String createdId;
+    private String createId;
 
     @TableField(value = "th_create_time")
     @ApiModelProperty(value = "创建时间")
