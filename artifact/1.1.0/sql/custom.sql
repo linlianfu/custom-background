@@ -1,5 +1,5 @@
 CREATE TABLE `cb_store` (
-  `st_id` char(32) NOT NULL COMMENT '店铺 id',
+  `st_id` varchar(32) NOT NULL COMMENT '店铺 id',
   `st_store_name` varchar(255) DEFAULT NULL COMMENT '店铺名称',
   `st_shop_id` varchar(32) DEFAULT NULL COMMENT '商户 id',
   `st_registration_time` datetime DEFAULT NULL COMMENT '注册时间',
@@ -36,3 +36,20 @@ CREATE TABLE `cb_theme` (
   `th_create_time` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`th_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='主题管理';
+
+
+-- 03.28 调整字段类型
+ALTER TABLE sys_user MODIFY user_id varchar(32);
+ALTER TABLE sys_role MODIFY role_id varchar(32);
+ALTER TABLE cb_store MODIFY st_id varchar(32);
+ALTER TABLE sys_users_roles MODIFY user_id varchar(32);
+ALTER TABLE sys_users_roles MODIFY role_id varchar(32);
+ALTER TABLE sys_users_jobs MODIFY user_id varchar(32);
+ALTER TABLE sys_roles_menus MODIFY role_id varchar(32);
+
+update sys_user set user_id = '2d0e5908df3811e8a4ec2afb6e36c22c' where user_id = 1;
+update sys_role set role_id = '53af3b61e02711e8a4ec2afb6e36c22c' where role_id = 1;
+update sys_users_roles set role_id = '53af3b61e02711e8a4ec2afb6e36c22c' where user_id = 1 and role_id = 1;
+update sys_users_rolesSET user_id = '2d0e5908df3811e8a4ec2afb6e36c22c',role_id = '53af3b61e02711e8a4ec2afb6e36c22c'WHERE user_id = 1 AND role_id = 1;
+update sys_users_jobs set user_id = '2d0e5908df3811e8a4ec2afb6e36c22c'  WHERE user_id= 1
+update sys_roles_menus set role_id = '53af3b61e02711e8a4ec2afb6e36c22c' where role_id = 1;

@@ -22,21 +22,32 @@ import lombok.RequiredArgsConstructor;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.system.domain.Dept;
 import me.zhengjie.modules.system.domain.User;
+import me.zhengjie.modules.system.domain.vo.DeptQueryCriteria;
+import me.zhengjie.modules.system.mapper.DeptMapper;
 import me.zhengjie.modules.system.mapper.RoleMapper;
 import me.zhengjie.modules.system.mapper.UserMapper;
-import me.zhengjie.modules.system.domain.vo.DeptQueryCriteria;
-import me.zhengjie.utils.*;
-import me.zhengjie.modules.system.mapper.DeptMapper;
 import me.zhengjie.modules.system.service.DeptService;
+import me.zhengjie.utils.CacheKey;
+import me.zhengjie.utils.FileUtil;
+import me.zhengjie.utils.RedisUtils;
+import me.zhengjie.utils.SecurityUtils;
+import me.zhengjie.utils.StringUtils;
 import me.zhengjie.utils.enums.DataScopeEnum;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -97,7 +108,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     }
 
     @Override
-    public Set<Dept> findByRoleId(Long id) {
+    public Set<Dept> findByRoleId(String id) {
         return deptMapper.findByRoleId(id);
     }
 

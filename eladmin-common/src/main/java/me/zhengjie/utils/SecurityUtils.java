@@ -26,6 +26,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+
 import java.util.List;
 
 /**
@@ -66,11 +67,11 @@ public class SecurityUtils {
      * 获取系统用户ID
      * @return 系统用户ID
      */
-    public static Long getCurrentUserId() {
+    public static String getCurrentUserId() {
         UserDetails userDetails = getCurrentUser();
         // 将 Java 对象转换为 JSONObject 对象
         JSONObject jsonObject = (JSONObject) JSON.toJSON(userDetails);
-        return jsonObject.getJSONObject("user").getLong("id");
+        return jsonObject.getJSONObject("user").getString("id");
     }
 
     /**

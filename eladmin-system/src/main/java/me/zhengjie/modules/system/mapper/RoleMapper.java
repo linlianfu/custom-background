@@ -21,6 +21,7 @@ import me.zhengjie.modules.system.domain.vo.RoleQueryCriteria;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+
 import java.util.List;
 import java.util.Set;
 
@@ -33,10 +34,10 @@ public interface RoleMapper extends BaseMapper<Role> {
 
     List<Role> queryAll();
 
-    Role findById(@Param("roleId") Long roleId);
+    Role findById(@Param("roleId") String roleId);
     Role findByName(@Param("name") String name);
 
-    List<Role> findByUserId(@Param("userId") Long userId);
+    List<Role> findByUserId(@Param("userId") String userId);
 
     Long countAll(@Param("criteria") RoleQueryCriteria criteria);
 

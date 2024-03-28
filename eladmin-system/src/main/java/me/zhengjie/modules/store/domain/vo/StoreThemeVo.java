@@ -46,6 +46,11 @@ public class StoreThemeVo implements Serializable {
 
     @ApiModelProperty(value = "主题名称")
     private String themeName;
+    /**
+     * @see me.zhengjie.modules.store.domain.vo.RiskType
+     */
+    @ApiModelProperty(value = "主题风险")
+    private int riskType;
 
     @ApiModelProperty(value = "上架时间")
     private LocalDate upTime;
@@ -66,7 +71,7 @@ public class StoreThemeVo implements Serializable {
     private Integer tortType;
 
     @ApiModelProperty(value = "侵权时间")
-    private LocalDateTime tortTime;
+    private LocalDate tortTime;
 
     @ApiModelProperty(value = "知识产权名称")
     private String intellectualPropertyName;

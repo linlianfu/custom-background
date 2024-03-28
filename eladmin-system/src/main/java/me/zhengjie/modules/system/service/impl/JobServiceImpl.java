@@ -21,19 +21,28 @@ import lombok.RequiredArgsConstructor;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.exception.EntityExistException;
 import me.zhengjie.modules.system.domain.Job;
-import me.zhengjie.modules.system.mapper.UserMapper;
 import me.zhengjie.modules.system.domain.vo.JobQueryCriteria;
-import me.zhengjie.utils.*;
 import me.zhengjie.modules.system.mapper.JobMapper;
+import me.zhengjie.modules.system.mapper.UserMapper;
 import me.zhengjie.modules.system.service.JobService;
+import me.zhengjie.utils.CacheKey;
+import me.zhengjie.utils.FileUtil;
+import me.zhengjie.utils.PageResult;
+import me.zhengjie.utils.PageUtil;
+import me.zhengjie.utils.RedisUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
 * @author Zheng Jie
@@ -92,7 +101,7 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
     public void delete(Set<Long> ids) {
         removeBatchByIds(ids);
         // 删除缓存
-        redisUtils.delByKeys(CacheKey.JOB_ID, ids);
+        redisUtils.del(CacheKey.JOB_ID, ids);
     }
 
     @Override

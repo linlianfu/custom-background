@@ -23,6 +23,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import me.zhengjie.base.BaseEntity;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -41,9 +42,9 @@ import java.util.Set;
 public class User extends BaseEntity implements Serializable {
 
     @NotNull(groups = Update.class)
-    @TableId(value="user_id", type = IdType.AUTO)
+    @TableId(value="user_id",type = IdType.ASSIGN_UUID)
     @ApiModelProperty(value = "ID", hidden = true)
-    private Long id;
+    private String id;
 
     @TableField(exist = false)
     @ApiModelProperty(value = "用户角色")

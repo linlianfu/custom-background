@@ -21,6 +21,7 @@ import me.zhengjie.modules.system.domain.User;
 import me.zhengjie.modules.system.domain.vo.UserQueryCriteria;
 import me.zhengjie.utils.PageResult;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
@@ -39,7 +40,7 @@ public interface UserService extends IService<User> {
      * @param id ID
      * @return /
      */
-    User findById(long id);
+    User findById(String id);
 
     /**
      * 新增用户
@@ -58,7 +59,7 @@ public interface UserService extends IService<User> {
      * 删除用户
      * @param ids /
      */
-    void delete(Set<Long> ids);
+    void delete(Set<String> ids);
 
     /**
      * 根据用户名查询

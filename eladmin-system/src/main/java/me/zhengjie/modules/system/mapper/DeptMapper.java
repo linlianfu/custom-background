@@ -21,6 +21,7 @@ import me.zhengjie.modules.system.domain.vo.DeptQueryCriteria;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+
 import java.util.List;
 import java.util.Set;
 
@@ -37,7 +38,7 @@ public interface DeptMapper extends BaseMapper<Dept> {
 
     List<Dept> findByPidIsNull();
 
-    Set<Dept> findByRoleId(@Param("roleId") Long roleId);
+    Set<Dept> findByRoleId(@Param("roleId") String roleId);
 
     @Select("select count(*) from sys_dept where pid = #{pid}")
     int countByPid(@Param("pid") Long pid);

@@ -21,6 +21,7 @@ import me.zhengjie.modules.system.domain.vo.MenuQueryCriteria;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -34,7 +35,7 @@ public interface MenuMapper extends BaseMapper<Menu> {
 
     List<Menu> findAll(@Param("criteria") MenuQueryCriteria criteria);
 
-    LinkedHashSet<Menu> findByRoleIdsAndTypeNot(@Param("roleIds") Set<Long> roleIds, @Param("type") Integer type);
+    LinkedHashSet<Menu> findByRoleIdsAndTypeNot(@Param("roleIds") Set<String> roleIds, @Param("type") Integer type);
 
     List<Menu> findByPidIsNullOrderByMenuSort();
 

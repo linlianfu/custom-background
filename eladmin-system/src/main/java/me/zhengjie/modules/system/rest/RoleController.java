@@ -21,17 +21,25 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.annotation.Log;
-import me.zhengjie.modules.system.domain.Role;
 import me.zhengjie.exception.BadRequestException;
-import me.zhengjie.modules.system.service.RoleService;
+import me.zhengjie.modules.system.domain.Role;
 import me.zhengjie.modules.system.domain.vo.RoleQueryCriteria;
+import me.zhengjie.modules.system.service.RoleService;
 import me.zhengjie.utils.PageResult;
 import me.zhengjie.utils.SecurityUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collections;
@@ -56,7 +64,7 @@ public class RoleController {
     @ApiOperation("获取单个role")
     @GetMapping(value = "/{id}")
     @PreAuthorize("@el.check('roles:list')")
-    public ResponseEntity<Role> findRoleById(@PathVariable Long id){
+    public ResponseEntity<Role> findRoleById(@PathVariable String id){
         return new ResponseEntity<>(roleService.findById(id), HttpStatus.OK);
     }
 
@@ -125,8 +133,8 @@ public class RoleController {
     @ApiOperation("删除角色")
     @DeleteMapping
     @PreAuthorize("@el.check('roles:del')")
-    public ResponseEntity<Object> deleteRole(@RequestBody Set<Long> ids){
-        for (Long id : ids) {
+    public ResponseEntity<Object> deleteRole(@RequestBody Set<String> ids){
+        for (String id : ids) {
             Role role = roleService.getById(id);
             getLevels(role.getLevel());
         }

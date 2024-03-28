@@ -19,28 +19,39 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
+import me.zhengjie.exception.BadRequestException;
+import me.zhengjie.exception.EntityExistException;
 import me.zhengjie.modules.system.domain.Menu;
 import me.zhengjie.modules.system.domain.Role;
 import me.zhengjie.modules.system.domain.User;
 import me.zhengjie.modules.system.domain.vo.MenuMetaVo;
+import me.zhengjie.modules.system.domain.vo.MenuQueryCriteria;
 import me.zhengjie.modules.system.domain.vo.MenuVo;
-import me.zhengjie.exception.BadRequestException;
-import me.zhengjie.exception.EntityExistException;
 import me.zhengjie.modules.system.mapper.MenuMapper;
 import me.zhengjie.modules.system.mapper.RoleMenuMapper;
 import me.zhengjie.modules.system.mapper.UserMapper;
 import me.zhengjie.modules.system.service.MenuService;
 import me.zhengjie.modules.system.service.RoleService;
-import me.zhengjie.modules.system.domain.vo.MenuQueryCriteria;
-import me.zhengjie.utils.*;
+import me.zhengjie.utils.CacheKey;
+import me.zhengjie.utils.FileUtil;
+import me.zhengjie.utils.RedisUtils;
+import me.zhengjie.utils.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -98,9 +109,9 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
      */
     @Override
     @Cacheable(key = "'user:' + #p0")
-    public List<Menu> findByUser(Long currentUserId) {
+    public List<Menu> findByUser(String currentUserId) {
         List<Role> roles = roleService.findByUsersId(currentUserId);
-        Set<Long> roleIds = roles.stream().map(Role::getId).collect(Collectors.toSet());
+        Set<String> roleIds = roles.stream().map(Role::getId).collect(Collectors.toSet());
         LinkedHashSet<Menu> menus = menuMapper.findByRoleIdsAndTypeNot(roleIds, 2);
         return new ArrayList<>(menus);
     }

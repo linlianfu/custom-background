@@ -15,23 +15,18 @@
  */
 package me.zhengjie.modules.store.domain;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import lombok.Data;
 import cn.hutool.core.bean.BeanUtil;
-import io.swagger.annotations.ApiModelProperty;
 import cn.hutool.core.bean.copier.CopyOptions;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
-import java.sql.Date;
-import java.sql.Timestamp;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 /**
  * @description /
@@ -42,7 +37,7 @@ import javax.validation.constraints.NotNull;
 @TableName("cb_store")
 public class Store implements Serializable {
 
-    @TableId(value = "st_id")
+    @TableId(value = "st_id",type = IdType.ASSIGN_UUID)
     @ApiModelProperty(value = "店铺 id")
     private String id;
 

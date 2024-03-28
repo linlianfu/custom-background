@@ -17,6 +17,7 @@ package me.zhengjie.modules.store.domain;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -38,7 +39,7 @@ import java.time.LocalDateTime;
 @TableName("cb_store_theme")
 public class StoreTheme implements Serializable {
 
-    @TableId(value = "id")
+    @TableId(value = "id",type = IdType.ASSIGN_UUID)
     @ApiModelProperty(value = "id")
     private String id;
 
@@ -74,7 +75,7 @@ public class StoreTheme implements Serializable {
 
     @TableField("sth_tort_time")
     @ApiModelProperty(value = "侵权时间")
-    private LocalDateTime tortTime;
+    private LocalDate tortTime;
 
     @TableField("sth_intellectual_property_name")
     @ApiModelProperty(value = "知识产权名称")

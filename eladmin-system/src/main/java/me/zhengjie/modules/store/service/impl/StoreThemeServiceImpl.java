@@ -90,11 +90,13 @@ public class StoreThemeServiceImpl extends ServiceImpl<StoreThemeMapper, StoreTh
 
         Map<String, String> storeMap = storeMapper.selectBatchIds(storeIdList).stream()
                 .collect(Collectors.toMap(Store::getId, Store::getStoreName));
-        Map<String, String> themeMap = themeMapper.selectBatchIds(themeIdList).stream()
-                .collect(Collectors.toMap(Theme::getId, Theme::getName));
+        Map<String, Theme> themeMap = themeMapper.selectBatchIds(themeIdList).stream()
+                .collect(Collectors.toMap(Theme::getId, p->p));
         storeThemeList =  storeThemeList.stream().peek(p->{
             p.setStoreName(storeMap.get(p.getStoreId()));
-            p.setThemeName(themeMap.get(p.getThemeId()));
+            Theme theme = themeMap.get(p.getThemeId());
+            p.setThemeName(theme.getName());
+            p.setRiskType(theme.getRiskType());
         }).collect(Collectors.toList());
         return PageUtil.toPage(storeThemeList,dbPage.getTotal());
     }
@@ -118,7 +120,7 @@ public class StoreThemeServiceImpl extends ServiceImpl<StoreThemeMapper, StoreTh
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void create(StoreTheme resources) {
-        resources.setCreateId(SecurityUtils.getCurrentUserId().toString());
+        resources.setCreateId(SecurityUtils.getCurrentUserId());
         resources.setCreateTime(LocalDateTime.now());
         save(resources);
     }

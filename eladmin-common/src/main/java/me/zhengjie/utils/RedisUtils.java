@@ -21,10 +21,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.*;
+import org.springframework.data.redis.core.ConvertingCursor;
+import org.springframework.data.redis.core.Cursor;
+import org.springframework.data.redis.core.RedisCallback;
+import org.springframework.data.redis.core.RedisConnectionUtils;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Component;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -710,7 +722,19 @@ public class RedisUtils {
      * @param prefix 前缀
      * @param ids    id
      */
-    public void delByKeys(String prefix, Set<Long> ids) {
+    public void delByKeys(String prefix, Set<String> ids) {
+        Set<Object> keys = new HashSet<>();
+        for (String id : ids) {
+            keys.addAll(redisTemplate.keys(new StringBuffer(prefix).append(id).toString()));
+        }
+        long count = redisTemplate.delete(keys);
+        // 此处提示可自行删除
+        log.debug("--------------------------------------------");
+        log.debug("成功删除缓存：" + keys.toString());
+        log.debug("缓存删除数量：" + count + "个");
+        log.debug("--------------------------------------------");
+    }
+    public void del(String prefix, Set<Long> ids) {
         Set<Object> keys = new HashSet<>();
         for (Long id : ids) {
             keys.addAll(redisTemplate.keys(new StringBuffer(prefix).append(id).toString()));

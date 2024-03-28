@@ -115,5 +115,5 @@ public interface MenuService extends IService<Menu> {
      * @param currentUserId /
      * @return /
      */
-    List<Menu> findByUser(Long currentUserId);
+    List<Menu> findByUser(String currentUserId);
 }

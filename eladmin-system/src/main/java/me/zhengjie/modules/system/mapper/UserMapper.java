@@ -21,6 +21,7 @@ import me.zhengjie.modules.system.domain.vo.UserQueryCriteria;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -48,7 +49,7 @@ public interface UserMapper extends BaseMapper<User> {
     @Select("update sys_user set email = #{email} where username = #{username}")
     void updateEmail(@Param("username") String username, @Param("email") String email);
 
-    List<User> findByRoleId(@Param("roleId") Long roleId);
+    List<User> findByRoleId(@Param("roleId") String roleId);
 
     List<User> findByRoleDeptId(@Param("deptId") Long deptId);
 
@@ -58,7 +59,7 @@ public interface UserMapper extends BaseMapper<User> {
 
     int countByDepts(@Param("deptIds") Set<Long> deptIds);
 
-    int countByRoles(@Param("roleIds") Set<Long> roleIds);
+    int countByRoles(@Param("roleIds") Set<String> roleIds);
 
     void resetPwd(@Param("userIds") Set<Long> userIds, @Param("pwd") String pwd);
 }

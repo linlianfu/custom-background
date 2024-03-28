@@ -18,6 +18,7 @@ package me.zhengjie.modules.system.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import me.zhengjie.modules.system.domain.Dept;
 import me.zhengjie.modules.system.domain.vo.DeptQueryCriteria;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
@@ -76,7 +77,7 @@ public interface DeptService extends IService<Dept> {
      * @param id /
      * @return /
      */
-    Set<Dept> findByRoleId(Long id);
+    Set<Dept> findByRoleId(String id);
 
     /**
      * 导出数据
