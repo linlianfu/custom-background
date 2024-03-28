@@ -1,22 +1,27 @@
 package me.zhengjie.modules.store.rest;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import me.zhengjie.annotation.Log;
 import me.zhengjie.modules.store.domain.StoreTheme;
+import me.zhengjie.modules.store.domain.vo.StoreThemeQueryCriteria;
 import me.zhengjie.modules.store.domain.vo.StoreThemeVo;
 import me.zhengjie.modules.store.service.StoreThemeService;
-import me.zhengjie.modules.store.domain.vo.StoreThemeQueryCriteria;
-import lombok.RequiredArgsConstructor;
-import java.util.List;
+import me.zhengjie.utils.PageResult;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-import io.swagger.annotations.*;
-import java.io.IOException;
-import javax.servlet.http.HttpServletResponse;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import me.zhengjie.utils.PageResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author eleven
@@ -34,6 +39,12 @@ public class StoreThemeController {
     @Log("查询StoreTheme")
     public ResponseEntity<PageResult<StoreThemeVo>> pageStoreTheme(StoreThemeQueryCriteria criteria, Page<Object> page){
         return new ResponseEntity<>(storeThemeService.pageStoreTheme(criteria,page),HttpStatus.OK);
+    }
+
+    @GetMapping("/getStoreTheme")
+    @Log("获取店铺主题详情")
+    public ResponseEntity<StoreThemeVo> getStoreTheme(String id){
+        return new ResponseEntity<>(storeThemeService.getStoreTheme(id),HttpStatus.OK);
     }
 
     @PostMapping

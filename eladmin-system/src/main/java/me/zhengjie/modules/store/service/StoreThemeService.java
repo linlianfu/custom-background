@@ -15,16 +15,14 @@
  */
 package me.zhengjie.modules.store.service;
 
-import me.zhengjie.modules.store.domain.StoreTheme;
-import me.zhengjie.modules.store.domain.vo.StoreThemeQueryCriteria;
-import java.util.Map;
-import java.util.List;
-import java.io.IOException;
-import javax.servlet.http.HttpServletResponse;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import me.zhengjie.modules.store.domain.StoreTheme;
+import me.zhengjie.modules.store.domain.vo.StoreThemeQueryCriteria;
 import me.zhengjie.modules.store.domain.vo.StoreThemeVo;
 import me.zhengjie.utils.PageResult;
+
+import java.util.List;
 
 /**
  * @description 服务接口
@@ -40,6 +38,12 @@ public interface StoreThemeService extends IService<StoreTheme> {
      * @return PageResult
      */
     PageResult<StoreThemeVo> pageStoreTheme(StoreThemeQueryCriteria criteria, Page<Object> page);
+
+    /**
+     * 获取店铺主题
+     * @return
+     */
+    StoreThemeVo getStoreTheme(String id);
 
     /**
      * 查询所有数据不分页

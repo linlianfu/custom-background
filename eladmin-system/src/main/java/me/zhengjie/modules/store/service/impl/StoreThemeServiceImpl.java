@@ -18,37 +18,31 @@ package me.zhengjie.modules.store.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import me.zhengjie.modules.store.domain.Store;
-import me.zhengjie.modules.store.domain.StoreTheme;
-import me.zhengjie.modules.store.domain.vo.StoreThemeVo;
-import me.zhengjie.modules.store.mapper.StoreMapper;
-import me.zhengjie.modules.theme.domain.Theme;
-import me.zhengjie.modules.theme.mapper.ThemeMapper;
-import me.zhengjie.utils.FileUtil;
-import lombok.RequiredArgsConstructor;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import me.zhengjie.modules.store.service.StoreThemeService;
+import lombok.RequiredArgsConstructor;
+import me.zhengjie.modules.store.domain.Store;
+import me.zhengjie.modules.store.domain.StoreTheme;
 import me.zhengjie.modules.store.domain.vo.StoreThemeQueryCriteria;
+import me.zhengjie.modules.store.domain.vo.StoreThemeVo;
+import me.zhengjie.modules.store.mapper.StoreMapper;
 import me.zhengjie.modules.store.mapper.StoreThemeMapper;
+import me.zhengjie.modules.store.service.StoreThemeService;
+import me.zhengjie.modules.theme.domain.Theme;
+import me.zhengjie.modules.theme.mapper.ThemeMapper;
 import me.zhengjie.utils.ModelMapperUtils;
+import me.zhengjie.utils.PageResult;
+import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.SecurityUtils;
 import me.zhengjie.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import me.zhengjie.utils.PageUtil;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.io.IOException;
-import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.stream.Collectors;
-
-import me.zhengjie.utils.PageResult;
 
 /**
  * @description 服务实现
@@ -103,6 +97,17 @@ public class StoreThemeServiceImpl extends ServiceImpl<StoreThemeMapper, StoreTh
             p.setThemeName(themeMap.get(p.getThemeId()));
         }).collect(Collectors.toList());
         return PageUtil.toPage(storeThemeList,dbPage.getTotal());
+    }
+
+    @Override
+    public StoreThemeVo getStoreTheme(String id) {
+        StoreTheme storeTheme = storeThemeMapper.selectById(id);
+        StoreThemeVo result = ModelMapperUtils.map(storeTheme, StoreThemeVo.class);
+        Store store = storeMapper.selectById(result.getStoreId());
+        Theme theme = themeMapper.selectById(result.getThemeId());
+        result.setStoreName(store.getStoreName());
+        result.setThemeName(theme.getName());
+        return result;
     }
 
     @Override
