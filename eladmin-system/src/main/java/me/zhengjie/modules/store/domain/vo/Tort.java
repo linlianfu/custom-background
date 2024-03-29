@@ -7,8 +7,8 @@ package me.zhengjie.modules.store.domain.vo;
  */
 public enum Tort {
 
-    NO(1, "否"),
-    YES(2, "是");
+    NO(0, "否"),
+    YES(1, "是");
 
     int value;
 

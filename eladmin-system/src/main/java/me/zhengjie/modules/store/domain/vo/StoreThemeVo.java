@@ -46,6 +46,9 @@ public class StoreThemeVo implements Serializable {
 
     @ApiModelProperty(value = "主题名称")
     private String themeName;
+
+    @ApiModelProperty(value = "关键词")
+    private String keyword;
     /**
      * @see me.zhengjie.modules.store.domain.vo.RiskType
      */

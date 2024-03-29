@@ -16,6 +16,7 @@
         <result column="sth_create_time" property="createTime"/>
         <result column="st_store_name" property="storeName"/>
         <result column="th_name" property="themeName"/>
+        <result column="th_keyword" property="keyword"/>
         <result column="th_risk_type" property="riskType"/>
     </resultMap>
 
@@ -29,6 +30,9 @@
             </if>
             <if test="criteria.riskType != null ">
                 and th.th_risk_type = #{criteria.riskType}
+            </if>
+            <if test="criteria.tort != null ">
+                and sth_tort = #{criteria.tort}
             </if>
             <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(criteria.createId)">
                 and sth_create_id = #{criteria.createId}
@@ -44,7 +48,8 @@
         sth.*,
         st.st_store_name,
         th.th_name,
-        th.th_risk_type
+        th.th_risk_type,
+        th.th_keyword
         FROM
         cb_store_theme sth
         LEFT JOIN cb_store st ON sth.sth_st_id = st.st_id

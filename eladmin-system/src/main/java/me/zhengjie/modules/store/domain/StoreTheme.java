@@ -94,6 +94,6 @@ public class StoreTheme implements Serializable {
     private LocalDateTime createTime;
 
     public void copy(StoreTheme source){
-        BeanUtil.copyProperties(source,this, CopyOptions.create().setIgnoreNullValue(true));
+        BeanUtil.copyProperties(source,this, CopyOptions.create());
     }
 }

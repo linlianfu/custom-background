@@ -11,6 +11,11 @@ mybatis-plus:
     # 设置本地缓存作用域
     local-cache-scope: SESSION
 
+  global-config:
+    db-config:
+     update-strategy: IGNORED
+
+
 spring:
   freemarker:
     check-template-location: false
