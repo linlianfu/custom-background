@@ -66,6 +66,12 @@ public class StoreServiceImpl extends ServiceImpl<StoreMapper, Store> implements
         if (StringUtils.isNotBlank(criteria.getStoreName())){
             wrapper.like(Store::getStoreName,criteria.getStoreName());
         }
+        if (StringUtils.isNotBlank(criteria.getLegalPerson())){
+            wrapper.like(Store::getLegalPerson,criteria.getLegalPerson());
+        }
+        if (StringUtils.isNotBlank(criteria.getBusinessLicense())){
+            wrapper.like(Store::getBusinessLicense,criteria.getBusinessLicense());
+        }
         if (criteria.getStatus() != null){
             wrapper.eq(Store::getStatus,criteria.getStatus());
         }

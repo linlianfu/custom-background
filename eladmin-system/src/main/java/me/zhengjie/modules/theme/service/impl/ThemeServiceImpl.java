@@ -52,6 +52,9 @@ public class ThemeServiceImpl extends ServiceImpl<ThemeMapper, Theme> implements
         if (criteria.getRiskType() != null){
             wrapper.eq(Theme::getRiskType,criteria.getRiskType());
         }
+        if (criteria.getFlow() != null){
+            wrapper.eq(Theme::getFlow,criteria.getFlow());
+        }
         dbPage = themeMapper.selectPage(
                 dbPage, wrapper.orderByDesc(Theme::getCreateTime)
         );

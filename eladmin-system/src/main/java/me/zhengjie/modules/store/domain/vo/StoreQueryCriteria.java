@@ -30,4 +30,10 @@ public class StoreQueryCriteria{
 
     @ApiModelProperty(value = "店铺状态 | 1：运营  2、退出运营")
     private Integer status;
+
+    @ApiModelProperty(value = "法人")
+    private String legalPerson;
+
+    @ApiModelProperty(value = "营业执照")
+    private String businessLicense;
 }
