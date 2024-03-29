@@ -50,7 +50,24 @@ ALTER TABLE cb_store_theme MODIFY sth_create_id varchar(32);
 
 update sys_user set user_id = '2d0e5908df3811e8a4ec2afb6e36c22c' where user_id = 1;
 update sys_role set role_id = '53af3b61e02711e8a4ec2afb6e36c22c' where role_id = 1;
-update sys_users_roles set role_id = '53af3b61e02711e8a4ec2afb6e36c22c' where user_id = 1 and role_id = 1;
-update sys_users_rolesSET user_id = '2d0e5908df3811e8a4ec2afb6e36c22c',role_id = '53af3b61e02711e8a4ec2afb6e36c22c'WHERE user_id = 1 AND role_id = 1;
-update sys_users_jobs set user_id = '2d0e5908df3811e8a4ec2afb6e36c22c'  WHERE user_id= 1
+update sys_users_roles SET user_id = '2d0e5908df3811e8a4ec2afb6e36c22c',role_id = '53af3b61e02711e8a4ec2afb6e36c22c'WHERE user_id = 1 AND role_id = 1;
+update sys_users_jobs set user_id = '2d0e5908df3811e8a4ec2afb6e36c22c'  WHERE user_id= 1;
 update sys_roles_menus set role_id = '53af3b61e02711e8a4ec2afb6e36c22c' where role_id = 1;
+
+-- 新增菜单初始化
+INSERT INTO `sys_menu`(`menu_id`, `pid`, `sub_count`, `type`, `title`, `name`, `component`, `menu_sort`, `icon`, `path`, `i_frame`, `cache`, `hidden`, `permission`, `create_by`, `update_by`, `create_time`, `update_time`)
+VALUES (117, NULL, 1, 0, '图库管理', NULL, NULL, 1, 'theme', 'gallery', b'0', b'0', b'0', NULL, 'admin', 'admin', '2024-03-03 13:16:30', '2024-03-03 13:16:30');
+INSERT INTO `sys_menu`(`menu_id`, `pid`, `sub_count`, `type`, `title`, `name`, `component`, `menu_sort`, `icon`, `path`, `i_frame`, `cache`, `hidden`, `permission`, `create_by`, `update_by`, `create_time`, `update_time`)
+VALUES (119, NULL, 2, 0, '店铺管理', NULL, NULL, 3, 'shopping', 'store', b'0', b'0', b'0', NULL, 'admin', 'admin', '2024-03-15 17:55:21', '2024-03-15 17:55:21');
+INSERT INTO `sys_menu`(`menu_id`, `pid`, `sub_count`, `type`, `title`, `name`, `component`, `menu_sort`, `icon`, `path`, `i_frame`, `cache`, `hidden`, `permission`, `create_by`, `update_by`, `create_time`, `update_time`)
+VALUES (118, 117, 0, 1, '主题管理', 'Theme', 'gallery/theme/index', 2, 'list', 'theme', b'0', b'0', b'0', NULL, 'admin', 'admin', '2024-03-03 13:32:22', '2024-03-03 13:32:22');
+INSERT INTO `sys_menu`(`menu_id`, `pid`, `sub_count`, `type`, `title`, `name`, `component`, `menu_sort`, `icon`, `path`, `i_frame`, `cache`, `hidden`, `permission`, `create_by`, `update_by`, `create_time`, `update_time`)
+VALUES (120, 119, 0, 1, '我的店铺', 'StoreManager', 'store/storeManager/index', 1, 'index', 'storeManager', b'0', b'0', b'0', NULL, 'admin', 'admin', '2024-03-15 17:59:42', '2024-03-15 17:59:42');
+INSERT INTO `sys_menu`(`menu_id`, `pid`, `sub_count`, `type`, `title`, `name`, `component`, `menu_sort`, `icon`, `path`, `i_frame`, `cache`, `hidden`, `permission`, `create_by`, `update_by`, `create_time`, `update_time`)
+VALUES (121, 119, 0, 1, '店铺主题', 'StoreTheme', 'store/storeTheme', 999, 'link', 'store-theme', b'0', b'0', b'0', NULL, 'admin', 'admin', '2024-03-16 16:41:16', '2024-03-16 16:41:16');
+INSERT INTO `sys_roles_menus`(`menu_id`, `role_id`) VALUES (117, '53af3b61e02711e8a4ec2afb6e36c22c');
+INSERT INTO `sys_roles_menus`(`menu_id`, `role_id`) VALUES (118, '53af3b61e02711e8a4ec2afb6e36c22c');
+INSERT INTO `sys_roles_menus`(`menu_id`, `role_id`) VALUES (119, '53af3b61e02711e8a4ec2afb6e36c22c');
+INSERT INTO `sys_roles_menus`(`menu_id`, `role_id`) VALUES (120, '53af3b61e02711e8a4ec2afb6e36c22c');
+INSERT INTO `sys_roles_menus`(`menu_id`, `role_id`) VALUES (121, '53af3b61e02711e8a4ec2afb6e36c22c');
+
