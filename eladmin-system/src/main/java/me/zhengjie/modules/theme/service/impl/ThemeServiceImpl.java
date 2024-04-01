@@ -5,6 +5,9 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
+import me.zhengjie.exception.BadRequestException;
+import me.zhengjie.modules.store.domain.StoreTheme;
+import me.zhengjie.modules.store.mapper.StoreThemeMapper;
 import me.zhengjie.modules.system.service.UserService;
 import me.zhengjie.modules.theme.domain.Theme;
 import me.zhengjie.modules.theme.domain.vo.ThemeQueryCriteria;
@@ -36,29 +39,32 @@ public class ThemeServiceImpl extends ServiceImpl<ThemeMapper, Theme> implements
     private ThemeMapper themeMapper;
     @Autowired
     private UserService userService;
+    @Autowired
+    private StoreThemeMapper storeThemeMapper;
+
     @Override
     public PageResult<ThemeVo> queryAll(ThemeQueryCriteria criteria, Page<Object> page) {
         Page<Theme> dbPage = new Page<>(page.getCurrent(), page.getSize());
         LambdaQueryWrapper<Theme> wrapper = Wrappers.lambdaQuery(Theme.class);
-        if (!userService.currentUserSuperRole()){
-            wrapper.eq(Theme::getCreateId,SecurityUtils.getCurrentUserId());
+        if (!userService.currentUserSuperRole()) {
+            wrapper.eq(Theme::getCreateId, SecurityUtils.getCurrentUserId());
         }
-        if (StringUtils.isNotBlank(criteria.getName())){
-            wrapper.like(Theme::getName,criteria.getName());
+        if (StringUtils.isNotBlank(criteria.getName())) {
+            wrapper.like(Theme::getName, criteria.getName());
         }
-        if (StringUtils.isNotBlank(criteria.getKeyword())){
-            wrapper.like(Theme::getKeyword,criteria.getKeyword());
+        if (StringUtils.isNotBlank(criteria.getKeyword())) {
+            wrapper.like(Theme::getKeyword, criteria.getKeyword());
         }
-        if (criteria.getRiskType() != null){
-            wrapper.eq(Theme::getRiskType,criteria.getRiskType());
+        if (criteria.getRiskType() != null) {
+            wrapper.eq(Theme::getRiskType, criteria.getRiskType());
         }
-        if (criteria.getFlow() != null){
-            wrapper.eq(Theme::getFlow,criteria.getFlow());
+        if (criteria.getFlow() != null) {
+            wrapper.eq(Theme::getFlow, criteria.getFlow());
         }
         dbPage = themeMapper.selectPage(
                 dbPage, wrapper.orderByDesc(Theme::getCreateTime)
         );
-        return PageUtil.toPage(ModelMapperUtils.mapList(dbPage.getRecords(),ThemeVo.class),dbPage.getTotal());
+        return PageUtil.toPage(ModelMapperUtils.mapList(dbPage.getRecords(), ThemeVo.class), dbPage.getTotal());
     }
 
     @Override
@@ -88,6 +94,11 @@ public class ThemeServiceImpl extends ServiceImpl<ThemeMapper, Theme> implements
 
     @Override
     public void delete(Set<String> ids) {
+        Long count = storeThemeMapper.selectCount(Wrappers.lambdaQuery(StoreTheme.class)
+                .in(StoreTheme::getThemeId, ids));
+        if (count > 0) {
+            throw new BadRequestException("主题被引用，无法删除");
+        }
         themeMapper.deleteBatchIds(ids);
     }
 }

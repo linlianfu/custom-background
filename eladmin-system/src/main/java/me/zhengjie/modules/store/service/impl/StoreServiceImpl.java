@@ -76,7 +76,7 @@ public class StoreServiceImpl extends ServiceImpl<StoreMapper, Store> implements
             wrapper.eq(Store::getStatus,criteria.getStatus());
         }
         dbPage = storeMapper.selectPage(
-                dbPage, wrapper.orderByDesc(Store::getCreateTime)
+                dbPage, wrapper.orderByDesc(Store::getRegistrationTime)
         );
         return PageUtil.toPage(ModelMapperUtils.mapList(dbPage.getRecords(), Store.class),dbPage.getTotal());
     }

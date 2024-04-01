@@ -55,6 +55,18 @@
         LEFT JOIN cb_store st ON sth.sth_st_id = st.st_id
         LEFT JOIN cb_theme th ON sth.sth_th_id = th.th_id
         <include refid="Where_sql"/>
-        order by sth_create_time desc
+        order by
+        <if test="criteria.sortField == 'upTime'">
+            sth.sth_up_time
+        </if>
+        <if test="criteria.sortField == 'tortTime'">
+            sth.sth_tort_time
+        </if>
+        <if test="criteria.sortMethod == 1">
+            desc
+        </if>
+        <if test="criteria.sortMethod == 2">
+            asc
+        </if>
     </select>
 </mapper>

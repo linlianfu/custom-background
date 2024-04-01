@@ -37,4 +37,10 @@ public class StoreThemeQueryCriteria{
 
     @ApiModelProperty(value = "创建人")
     private String createId;
+
+    @ApiModelProperty(value = "排序字段 | 1：upTime 2：tortTime")
+    private String sortField = "upTime";
+
+    @ApiModelProperty(value = "排序方式 | 1：Desc 2；Asc")
+    private int sortMethod = 1;
 }
