@@ -30,8 +30,8 @@ public class ThemeQueryCriteria {
     @ApiModelProperty(value = "主题名称")
     private String name;
 
-    @ApiModelProperty(value = "关键词")
-    private String keyword;
+    @ApiModelProperty(value = "主题")
+    private String theme;
 
     @ApiModelProperty(value = "主题分类")
     private String categoryId;

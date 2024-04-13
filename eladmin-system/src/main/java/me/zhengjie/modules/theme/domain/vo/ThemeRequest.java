@@ -19,9 +19,12 @@ public class ThemeRequest {
     @ApiModelProperty(value = "主题名称")
     private String name;
 
-    @NotBlank(message = "请填写关键词")
-    @ApiModelProperty(value = "关键词")
-    private String keyword;
+    @NotBlank(message = "请填写主题")
+    @ApiModelProperty(value = "主题")
+    private String theme;
+
+    @ApiModelProperty(value = "标签,次关键词")
+    private String label;
 
     @ApiModelProperty(value = "主题分类")
     private String categoryId;

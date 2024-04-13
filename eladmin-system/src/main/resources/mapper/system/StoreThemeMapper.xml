@@ -16,7 +16,8 @@
         <result column="sth_create_time" property="createTime"/>
         <result column="st_store_name" property="storeName"/>
         <result column="th_name" property="themeName"/>
-        <result column="th_keyword" property="keyword"/>
+        <result column="th_theme" property="theme"/>
+        <result column="th_label" property="theme"/>
         <result column="th_risk_type" property="riskType"/>
     </resultMap>
 
@@ -49,7 +50,8 @@
         st.st_store_name,
         th.th_name,
         th.th_risk_type,
-        th.th_keyword
+        th.th_theme,
+        th.th_label
         FROM
         cb_store_theme sth
         LEFT JOIN cb_store st ON sth.sth_st_id = st.st_id
@@ -68,5 +70,18 @@
         <if test="criteria.sortMethod == 2">
             asc
         </if>
+    </select>
+        <select id="countThemeAssociateStoreGroupByTheme"
+                resultType="me.zhengjie.modules.store.domain.ThemeAssociateStoreResult">
+        select sth_th_id themeId, count(*) count from cb_store_theme
+        <where>
+            sth_th_id in
+            <if test="@org.apache.commons.collections4.CollectionUtils@isNotEmpty(criteria.themeIdList)">
+                <foreach collection="criteria.themeIdList" separator="," open="(" close=")" item="item">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        group by sth_th_id
     </select>
 </mapper>

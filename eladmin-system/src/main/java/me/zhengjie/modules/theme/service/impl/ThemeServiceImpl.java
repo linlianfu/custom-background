@@ -7,7 +7,11 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.store.domain.StoreTheme;
+import me.zhengjie.modules.store.domain.ThemeAssociateStoreResult;
+import me.zhengjie.modules.store.domain.vo.StoreThemeQueryCriteria;
 import me.zhengjie.modules.store.mapper.StoreThemeMapper;
+import me.zhengjie.modules.system.domain.User;
+import me.zhengjie.modules.system.mapper.UserMapper;
 import me.zhengjie.modules.system.service.UserService;
 import me.zhengjie.modules.theme.domain.Theme;
 import me.zhengjie.modules.theme.domain.vo.ThemeQueryCriteria;
@@ -20,12 +24,16 @@ import me.zhengjie.utils.PageResult;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.SecurityUtils;
 import me.zhengjie.utils.StringUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 /**
@@ -37,6 +45,8 @@ public class ThemeServiceImpl extends ServiceImpl<ThemeMapper, Theme> implements
 
     @Autowired
     private ThemeMapper themeMapper;
+    @Autowired
+    private  UserMapper userMapper;
     @Autowired
     private UserService userService;
     @Autowired
@@ -52,8 +62,8 @@ public class ThemeServiceImpl extends ServiceImpl<ThemeMapper, Theme> implements
         if (StringUtils.isNotBlank(criteria.getName())) {
             wrapper.like(Theme::getName, criteria.getName());
         }
-        if (StringUtils.isNotBlank(criteria.getKeyword())) {
-            wrapper.like(Theme::getKeyword, criteria.getKeyword());
+        if (StringUtils.isNotBlank(criteria.getTheme())) {
+            wrapper.like(Theme::getTheme, criteria.getTheme());
         }
         if (criteria.getRiskType() != null) {
             wrapper.eq(Theme::getRiskType, criteria.getRiskType());
@@ -64,14 +74,32 @@ public class ThemeServiceImpl extends ServiceImpl<ThemeMapper, Theme> implements
         dbPage = themeMapper.selectPage(
                 dbPage, wrapper.orderByDesc(Theme::getCreateTime)
         );
-        return PageUtil.toPage(ModelMapperUtils.mapList(dbPage.getRecords(), ThemeVo.class), dbPage.getTotal());
+        List<ThemeVo> list = ModelMapperUtils.mapList(dbPage.getRecords(), ThemeVo.class);
+        if (CollectionUtils.isNotEmpty(list)){
+            Set<String> createIdList = list.stream().map(ThemeVo::getCreateId).collect(Collectors.toSet());
+            List<User> users = userMapper.selectBatchIds(createIdList);
+            StoreThemeQueryCriteria storeThemeQueryCriteria = new StoreThemeQueryCriteria();
+            storeThemeQueryCriteria.setThemeIdList(list.stream().map(ThemeVo::getId).collect(Collectors.toList()));
+            List<ThemeAssociateStoreResult> themeStoreCount =
+                    storeThemeMapper.countThemeAssociateStoreGroupByTheme(storeThemeQueryCriteria);
+            if (CollectionUtils.isNotEmpty(users)){
+                Map<String, String> map = users.stream().collect(Collectors.toMap(User::getId, User::getNickName));
+                Map<String, Integer> themeStoreCountMap = themeStoreCount.stream().collect(Collectors.toMap(p -> p.getThemeId(), p -> p.getCount()));
+                for (ThemeVo p : list) {
+                    p.setCreate(map.get(p.getCreateId()));
+                    p.setAssociateStoreCount(themeStoreCountMap.getOrDefault(p.getId(),0));
+                }
+            }
+        }
+        return PageUtil.toPage(list, dbPage.getTotal());
     }
 
     @Override
     public boolean create(ThemeRequest request) {
         Theme entity = new Theme();
         entity.setName(request.getName());
-        entity.setKeyword(request.getKeyword());
+        entity.setTheme(request.getTheme());
+        entity.setLabel(request.getLabel());
         entity.setCategoryId(request.getCategoryId());
         entity.setRiskType(request.getRiskType());
         entity.setFlow(request.getFlow());

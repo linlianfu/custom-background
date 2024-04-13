@@ -34,7 +34,8 @@ CREATE TABLE `cb_store_theme` (
 CREATE TABLE `cb_theme` (
   `th_id` varchar(32) NOT NULL COMMENT '主题id',
   `th_name` varchar(255) DEFAULT NULL COMMENT '主题名称',
-  `th_keyword` varchar(255) DEFAULT NULL COMMENT '关键词',
+  `th_theme` varchar(255) DEFAULT NULL COMMENT '关键词',
+  `th_label` varchar(255) DEFAULT NULL COMMENT '标签，次关键词',
   `th_category_id` varchar(32) DEFAULT NULL COMMENT '主题分类',
   `th_risk_type` tinyint(4) DEFAULT NULL COMMENT '风险等级 | 1、常规主题  2、一般侵权 3、资金冻结 4、严重侵权',
   `th_flow` tinyint(4) DEFAULT NULL COMMENT '流量等级 | 1、普通 2、爆款',

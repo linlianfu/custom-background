@@ -85,6 +85,8 @@ public class StoreThemeServiceImpl extends ServiceImpl<StoreThemeMapper, StoreTh
         Theme theme = themeMapper.selectById(result.getThemeId());
         result.setStoreName(store.getStoreName());
         result.setThemeName(theme.getName());
+        result.setTheme(theme.getTheme());
+        result.setLabel(theme.getLabel());
         return result;
     }
 

@@ -26,12 +26,16 @@ public class Theme implements Serializable {
     private String id;
 
     @TableField(value = "th_name")
-    @ApiModelProperty(value = "主题名称")
+    @ApiModelProperty(value = "主题名称(中文)")
     private String name;
 
-    @TableField(value = "th_keyword")
-    @ApiModelProperty(value = "关键词")
-    private String keyword;
+    @TableField(value = "th_theme")
+    @ApiModelProperty(value = "主题")
+    private String theme;
+
+    @TableField(value = "th_label")
+    @ApiModelProperty(value = "标签,次关键词")
+    private String label;
 
     @TableField(value = "th_category_id")
     @ApiModelProperty(value = "主题分类")

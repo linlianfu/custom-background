@@ -3,6 +3,8 @@ package me.zhengjie.modules.store.domain.vo;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @author eleven
  * @date 2024-03-16
@@ -37,6 +39,8 @@ public class StoreThemeQueryCriteria{
 
     @ApiModelProperty(value = "创建人")
     private String createId;
+
+    private List<String> themeIdList;
 
     @ApiModelProperty(value = "排序字段 | 1：upTime 2：tortTime")
     private String sortField = "upTime";

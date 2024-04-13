@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import me.zhengjie.modules.store.domain.StoreTheme;
 import me.zhengjie.modules.store.domain.StoreThemeDetail;
+import me.zhengjie.modules.store.domain.ThemeAssociateStoreResult;
 import me.zhengjie.modules.store.domain.vo.StoreThemeQueryCriteria;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -21,4 +22,11 @@ public interface StoreThemeMapper extends BaseMapper<StoreTheme> {
     IPage<StoreThemeDetail> pageStoreTheme(@Param("criteria") StoreThemeQueryCriteria criteria, Page<Object> page);
 
     List<StoreTheme> findAll(@Param("criteria") StoreThemeQueryCriteria criteria);
+
+    /**
+     * 统计主题关联的店铺数量
+     * @param criteria
+     * @return
+     */
+    List<ThemeAssociateStoreResult> countThemeAssociateStoreGroupByTheme(@Param("criteria")StoreThemeQueryCriteria criteria);
 }
