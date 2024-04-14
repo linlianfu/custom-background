@@ -17,7 +17,7 @@
         <result column="st_store_name" property="storeName"/>
         <result column="th_name" property="themeName"/>
         <result column="th_theme" property="theme"/>
-        <result column="th_label" property="theme"/>
+        <result column="th_label" property="label"/>
         <result column="th_risk_type" property="riskType"/>
     </resultMap>
 
