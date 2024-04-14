@@ -36,6 +36,7 @@ import me.zhengjie.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -89,8 +90,15 @@ public class StoreServiceImpl extends ServiceImpl<StoreMapper, Store> implements
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void create(Store resources) {
+        Assert.hasText(resources.getStoreName(),"店铺名字不能为空");
+
+        String currentUserId = SecurityUtils.getCurrentUserId();
+        Long count = storeMapper.selectCount(Wrappers.lambdaQuery(Store.class)
+                .eq(Store::getStoreName, resources.getStoreName())
+        );
+        Assert.isTrue(count == null || count <=0,"店铺名称重复");
         resources.setCreateTime(LocalDateTime.now());
-        resources.setCreateId(SecurityUtils.getCurrentUserId());
+        resources.setCreateId(currentUserId);
         save(resources);
     }
 

@@ -21,8 +21,6 @@ public interface StoreThemeMapper extends BaseMapper<StoreTheme> {
 
     IPage<StoreThemeDetail> pageStoreTheme(@Param("criteria") StoreThemeQueryCriteria criteria, Page<Object> page);
 
-    List<StoreTheme> findAll(@Param("criteria") StoreThemeQueryCriteria criteria);
-
     /**
      * 统计主题关联的店铺数量
      * @param criteria

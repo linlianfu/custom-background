@@ -28,6 +28,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.util.Date;
 import java.util.List;
@@ -84,7 +85,8 @@ public class ThemeServiceImpl extends ServiceImpl<ThemeMapper, Theme> implements
                     storeThemeMapper.countThemeAssociateStoreGroupByTheme(storeThemeQueryCriteria);
             if (CollectionUtils.isNotEmpty(users)){
                 Map<String, String> map = users.stream().collect(Collectors.toMap(User::getId, User::getNickName));
-                Map<String, Integer> themeStoreCountMap = themeStoreCount.stream().collect(Collectors.toMap(p -> p.getThemeId(), p -> p.getCount()));
+                Map<String, Integer> themeStoreCountMap = themeStoreCount.stream().collect(Collectors.toMap(ThemeAssociateStoreResult::getThemeId,
+                        ThemeAssociateStoreResult::getCount));
                 for (ThemeVo p : list) {
                     p.setCreate(map.get(p.getCreateId()));
                     p.setAssociateStoreCount(themeStoreCountMap.getOrDefault(p.getId(),0));
@@ -96,6 +98,16 @@ public class ThemeServiceImpl extends ServiceImpl<ThemeMapper, Theme> implements
 
     @Override
     public boolean create(ThemeRequest request) {
+        Assert.hasText(request.getName(),"请输入主题名称");
+        Assert.hasText(request.getTheme(),"请输入主题");
+        String currentUserId = SecurityUtils.getCurrentUserId();
+
+        Long count = themeMapper.selectCount(Wrappers.lambdaQuery(Theme.class)
+                .eq(Theme::getName, request.getName())
+                .eq(Theme::getTheme,request.getTheme())
+                .eq(Theme::getCreateId,currentUserId)
+        );
+        Assert.isTrue(count == null || count <=0,"存在主题名称和主题一样的数据，请勿重复创建");
         Theme entity = new Theme();
         entity.setName(request.getName());
         entity.setTheme(request.getTheme());
@@ -105,16 +117,18 @@ public class ThemeServiceImpl extends ServiceImpl<ThemeMapper, Theme> implements
         entity.setFlow(request.getFlow());
         entity.setRemark(request.getRemark());
         entity.setCreateTime(new Date());
-        entity.setCreateId(SecurityUtils.getCurrentUserId());
+        entity.setCreateId(currentUserId);
         save(entity);
         return true;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean update(ThemeRequest resources) {
-        Theme theme = getById(resources.getId());
-        theme.copy(resources);
+    public boolean update(ThemeRequest request) {
+        Assert.hasText(request.getName(),"请输入主题名称");
+        Assert.hasText(request.getTheme(),"请输入主题");
+        Theme theme = getById(request.getId());
+        theme.copy(request);
         saveOrUpdate(theme);
         return true;
     }

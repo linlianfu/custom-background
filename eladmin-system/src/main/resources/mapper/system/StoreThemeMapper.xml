@@ -11,7 +11,9 @@
         <result column="sth_tort_type" property="tortType"/>
         <result column="sth_tort_time" property="tortTime"/>
         <result column="sth_intellectual_property_name" property="intellectualPropertyName"/>
+        <result column="sth_tort_fraction" property="tortFraction"/>
         <result column="sth_remark" property="remark"/>
+        <result column="sth_has_delete" property="hasDelete"/>
         <result column="sth_create_id" property="createId"/>
         <result column="sth_create_time" property="createTime"/>
         <result column="st_store_name" property="storeName"/>
@@ -71,10 +73,12 @@
             asc
         </if>
     </select>
-        <select id="countThemeAssociateStoreGroupByTheme"
-                resultType="me.zhengjie.modules.store.domain.ThemeAssociateStoreResult">
-        select sth_th_id themeId, count(*) count from cb_store_theme
+    <select id="countThemeAssociateStoreGroupByTheme"
+            resultType="me.zhengjie.modules.store.domain.ThemeAssociateStoreResult">
+        SELECT sth_th_id themeId,count( DISTINCT sth_st_id, sth_th_id ) count
+        FROM cb_store_theme
         <where>
+            sth_has_delete = FALSE and
             sth_th_id in
             <if test="@org.apache.commons.collections4.CollectionUtils@isNotEmpty(criteria.themeIdList)">
                 <foreach collection="criteria.themeIdList" separator="," open="(" close=")" item="item">

@@ -82,14 +82,21 @@ public class StoreThemeVo implements Serializable {
     @ApiModelProperty(value = "知识产权名称")
     private String intellectualPropertyName;
 
+    @ApiModelProperty(value = "侵权扣分")
+    private Integer tortFraction;
+
     @ApiModelProperty(value = "备注")
     private String remark;
+
+    @ApiModelProperty(value = "是否删除")
+    private boolean hasDelete;
 
     @ApiModelProperty(value = "创建人")
     private String createId;
 
     @ApiModelProperty(value = "创建时间")
     private LocalDateTime createTime;
+
 
     public void copy(StoreThemeVo source){
         BeanUtil.copyProperties(source,this, CopyOptions.create().setIgnoreNullValue(true));

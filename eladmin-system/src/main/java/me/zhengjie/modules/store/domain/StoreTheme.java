@@ -81,9 +81,17 @@ public class StoreTheme implements Serializable {
     @ApiModelProperty(value = "知识产权名称")
     private String intellectualPropertyName;
 
+    @TableField("sth_tort_fraction")
+    @ApiModelProperty(value = "侵权扣分")
+    private Integer tortFraction;
+
     @TableField("sth_remark")
     @ApiModelProperty(value = "备注")
     private String remark;
+
+    @TableField("sth_has_delete")
+    @ApiModelProperty(value = "是否删除")
+    private boolean hasDelete;
 
     @TableField("sth_create_id")
     @ApiModelProperty(value = "创建人")

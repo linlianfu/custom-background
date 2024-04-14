@@ -38,6 +38,7 @@ import me.zhengjie.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -93,6 +94,8 @@ public class StoreThemeServiceImpl extends ServiceImpl<StoreThemeMapper, StoreTh
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void create(StoreTheme resources) {
+        Assert.hasText(resources.getStoreId(),"请选择店铺");
+        Assert.hasText(resources.getThemeId(),"请选择主题");
         resources.setCreateId(SecurityUtils.getCurrentUserId());
         resources.setCreateTime(LocalDateTime.now());
         save(resources);
@@ -101,6 +104,9 @@ public class StoreThemeServiceImpl extends ServiceImpl<StoreThemeMapper, StoreTh
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void update(StoreTheme resources) {
+        Assert.hasText(resources.getId(),"当前请求无权限");
+        Assert.hasText(resources.getStoreId(),"请选择店铺");
+        Assert.hasText(resources.getThemeId(),"请选择主题");
         StoreTheme storeTheme = getById(resources.getId());
         storeTheme.copy(resources);
         saveOrUpdate(storeTheme);
