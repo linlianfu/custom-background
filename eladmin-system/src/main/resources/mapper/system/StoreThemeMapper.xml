@@ -31,6 +31,17 @@
             <if test="criteria.tortType != null ">
                 and sth_tort_type = #{criteria.tortType}
             </if>
+            <if test="criteria.hasTortFraction != null ">
+                <if test="criteria.hasTortFraction == true">
+                    and sth_tort_fraction > 0
+                </if>
+                <if test="criteria.hasTortFraction == false">
+                    and (sth_tort_fraction is null or sth_tort_fraction = 0)
+                </if>
+            </if>
+            <if test="criteria.hasDelete != null ">
+                and sth_has_delete = #{criteria.hasDelete}
+            </if>
             <if test="criteria.riskType != null ">
                 and th.th_risk_type = #{criteria.riskType}
             </if>

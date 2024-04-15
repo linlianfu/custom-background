@@ -36,4 +36,10 @@ public class StoreQueryCriteria{
 
     @ApiModelProperty(value = "营业执照")
     private String businessLicense;
+
+    @ApiModelProperty(value = "是否严重侵权")
+    private Boolean hasSeriousTrot;
+
+    @ApiModelProperty(value = "是否扣分")
+    private Boolean hasTortFraction;
 }

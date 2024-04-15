@@ -37,6 +37,12 @@ public class StoreThemeQueryCriteria{
     @ApiModelProperty(value = "知识产权名称")
     private String intellectualPropertyName;
 
+    @ApiModelProperty(value = "是否扣分")
+    private Boolean hasTortFraction;
+
+    @ApiModelProperty(value = "是否扣分")
+    private Boolean hasDelete;
+
     @ApiModelProperty(value = "创建人")
     private String createId;
 

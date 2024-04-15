@@ -76,6 +76,21 @@ public class StoreServiceImpl extends ServiceImpl<StoreMapper, Store> implements
         if (criteria.getStatus() != null){
             wrapper.eq(Store::getStatus,criteria.getStatus());
         }
+        if (criteria.getHasSeriousTrot() != null){
+            if (criteria.getHasSeriousTrot()){
+                wrapper.gt(Store::getSeriousTrotCount,0);
+            }else {
+//                wrapper.nested(p->p.isNull(Store::getTortFraction).or().gt(Store::getTortFraction,0));
+                wrapper.eq(Store::getSeriousTrotCount,0);
+            }
+        }
+        if (criteria.getHasTortFraction() != null){
+            if (criteria.getHasTortFraction()){
+                wrapper.gt(Store::getTortFraction,0);
+            }else {
+                wrapper.eq(Store::getTortFraction,0);
+            }
+        }
         dbPage = storeMapper.selectPage(
                 dbPage, wrapper.orderByDesc(Store::getRegistrationTime)
         );
