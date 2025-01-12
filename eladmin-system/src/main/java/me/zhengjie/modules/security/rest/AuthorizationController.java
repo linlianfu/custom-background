@@ -27,8 +27,11 @@ import me.zhengjie.annotation.rest.AnonymousGetMapping;
 import me.zhengjie.annotation.rest.AnonymousPostMapping;
 import me.zhengjie.config.RsaProperties;
 import me.zhengjie.exception.BadRequestException;
+import me.zhengjie.modules.secretkey.service.SecretKeyService;
+import me.zhengjie.modules.secretkey.service.dto.SecretKeyDto;
 import me.zhengjie.modules.security.config.bean.LoginCodeEnum;
 import me.zhengjie.modules.security.config.bean.LoginProperties;
+import me.zhengjie.modules.security.config.bean.SecretResult;
 import me.zhengjie.modules.security.config.bean.SecurityProperties;
 import me.zhengjie.modules.security.security.TokenProvider;
 import me.zhengjie.modules.security.service.OnlineUserService;
@@ -38,6 +41,7 @@ import me.zhengjie.utils.RedisUtils;
 import me.zhengjie.utils.RsaUtils;
 import me.zhengjie.utils.SecurityUtils;
 import me.zhengjie.utils.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -79,6 +83,8 @@ public class AuthorizationController {
     private final OnlineUserService onlineUserService;
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    @Autowired
+    private SecretKeyService secretKeyService;
     @Resource
     private LoginProperties loginProperties;
 
@@ -161,8 +167,12 @@ public class AuthorizationController {
 
     @ApiOperation("爬虫token验证")
     @AnonymousGetMapping(value = "/secretKey")
-    public boolean verySecretKey(String secretKey,String deviceNumber){
+    public SecretResult verifySecretKey(String secretKey, String deviceNumber){
+        SecretResult  result = new SecretResult();
+
+        SecretKeyDto secret = secretKeyService.getSecretKey(secretKey, deviceNumber);
+        result.setValid(secret != null);
         log.info("secretKey:"+secretKey+",deviceNumber:"+deviceNumber);
-        return StringUtils.isNotBlank(secretKey) && StringUtils.isNotBlank(deviceNumber);
+        return result;
     }
 }
