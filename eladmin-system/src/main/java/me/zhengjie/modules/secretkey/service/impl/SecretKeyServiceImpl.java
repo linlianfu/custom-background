@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.modules.secretkey.domain.SecretKey;
 import me.zhengjie.modules.secretkey.domain.vo.SecretKeyCriteria;
+import me.zhengjie.modules.secretkey.domain.vo.SecretKeyRequest;
 import me.zhengjie.modules.secretkey.domain.vo.SecretKeyVo;
 import me.zhengjie.modules.secretkey.mapper.SecretKeyMapper;
 import me.zhengjie.modules.secretkey.service.SecretKeyService;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -72,5 +74,36 @@ public class SecretKeyServiceImpl extends ServiceImpl<SecretKeyMapper, SecretKey
         List<SecretKeyVo> list = ModelMapperUtils.mapList(dbPage.getRecords(), SecretKeyVo.class);
 
         return PageUtil.toPage(list, dbPage.getTotal());
+    }
+
+    @Override
+    public boolean createSecretKey(SecretKeyRequest request) {
+        Assert.hasText(request.getDeviceNumber(),"设备号不能为空");
+        Assert.hasText(request.getName(),"名称不能为空");
+        Assert.hasText(request.getSecretKey(),"密钥不能为空");
+        SecretKey record = new SecretKey();
+        record.setName(request.getName());
+        record.setSecretKey(request.getSecretKey());
+        record.setDeviceNumber(request.getDeviceNumber());
+        record.setEnable(true);
+        record.setCreateTime(new Date());
+        save(record);
+        return true;
+    }
+
+    @Override
+    public boolean updateSecretKey(SecretKeyRequest request) {
+        SecretKey secretKey = secretKeyMapper.selectById(request.getId());
+        secretKey.setName(request.getName());
+        secretKey.setDeviceNumber(request.getDeviceNumber());
+        secretKey.setSecretKey(request.getSecretKey());
+        updateById(secretKey);
+        return true;
+    }
+
+    @Override
+    public boolean deleteById(List<String> id) {
+        secretKeyMapper.deleteBatchIds(id);
+        return true;
     }
 }
