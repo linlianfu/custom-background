@@ -52,4 +52,10 @@ public interface SecretKeyService {
      * @return
      */
     boolean deleteById(List<String> id);
+
+    /**
+     * 更新密钥状态
+     * @param id
+     */
+    void updateStatus(String id);
 }

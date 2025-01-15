@@ -106,4 +106,15 @@ public class SecretKeyServiceImpl extends ServiceImpl<SecretKeyMapper, SecretKey
         secretKeyMapper.deleteBatchIds(id);
         return true;
     }
+
+    @Override
+    public void updateStatus(String id) {
+        SecretKey secretKey = secretKeyMapper.selectById(id);
+        if (secretKey.isEnable()){
+            secretKey.setEnable(false);
+        }else {
+            secretKey.setEnable(true);
+        }
+        updateById(secretKey);
+    }
 }
