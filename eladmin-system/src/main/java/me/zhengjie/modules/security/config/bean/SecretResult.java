@@ -11,4 +11,5 @@ public class SecretResult {
      * 是否有效
      */
     private boolean valid;
+
 }

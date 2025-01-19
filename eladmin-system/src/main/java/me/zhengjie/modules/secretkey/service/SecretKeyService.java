@@ -15,6 +15,12 @@ import java.util.List;
 public interface SecretKeyService {
 
     /**
+     * 获取唯一的Token
+     * @param token
+     * @return
+     */
+    SecretKeyDto getToken(String token);
+    /**
      * 获取唯一的密钥数据
      * @param secretKey
      * @param deviceNumber
@@ -22,6 +28,13 @@ public interface SecretKeyService {
      */
     SecretKeyDto getSecretKey(String secretKey, String deviceNumber);
 
+    /**
+     * token绑定设备
+     * @param token
+     * @param deviceNumber
+     * @return
+     */
+    boolean bindToken(String token,String deviceNumber);
     /**
      * 分页查询
      *

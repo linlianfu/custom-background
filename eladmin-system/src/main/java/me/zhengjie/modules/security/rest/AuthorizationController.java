@@ -168,11 +168,25 @@ public class AuthorizationController {
     @ApiOperation("爬虫token验证")
     @AnonymousGetMapping(value = "/secretKey")
     public SecretResult verifySecretKey(String secretKey, String deviceNumber){
+        log.info("secretKey:"+secretKey+",deviceNumber:"+deviceNumber);
+
         SecretResult  result = new SecretResult();
 
-        SecretKeyDto secret = secretKeyService.getSecretKey(secretKey, deviceNumber);
-        result.setValid(secret != null);
-        log.info("secretKey:"+secretKey+",deviceNumber:"+deviceNumber);
+        SecretKeyDto secret = secretKeyService.getToken(secretKey);
+        if (secret == null)
+            return result;
+        String tokenDeviceNumber = secret.getDeviceNumber();
+        if (StringUtils.isNotBlank(tokenDeviceNumber)){
+            if (deviceNumber.equals(tokenDeviceNumber)){
+                result.setValid(true);
+            }else {
+                log.warn("token错误，与绑定的设备不一致");
+                return result;
+            }
+        }else {
+            secretKeyService.bindToken(secretKey,deviceNumber);
+            result.setValid(true);
+        }
         return result;
     }
 }

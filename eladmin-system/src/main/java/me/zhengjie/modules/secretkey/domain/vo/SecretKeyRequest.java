@@ -19,6 +19,5 @@ public class SecretKeyRequest {
     @ApiModelProperty(value = "密钥")
     private String secretKey;
 
-    @ApiModelProperty(value = "设备号")
     private String deviceNumber;
 }

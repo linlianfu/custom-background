@@ -32,14 +32,14 @@ public class SecretKeyServiceImpl extends ServiceImpl<SecretKeyMapper, SecretKey
     @Autowired
     private SecretKeyMapper secretKeyMapper;
 
+
     @Override
-    public SecretKeyDto getSecretKey(String secretKey, String deviceNumber) {
-        Assert.hasText(secretKey,"密钥不能为空");
-        Assert.hasText(deviceNumber,"设备号不能为空");
+    public SecretKeyDto getToken(String token) {
+        Assert.hasText(token,"密钥不能为空");
 
         SecretKey key = secretKeyMapper.selectOne(Wrappers.lambdaQuery(SecretKey.class)
-                .eq(SecretKey::getSecretKey, secretKey)
-                .eq(SecretKey::getDeviceNumber, deviceNumber)
+                .eq(SecretKey::getSecretKey, token)
+                .eq(SecretKey::isEnable,true)
         );
         if (key == null)
             return null;
@@ -52,6 +52,44 @@ public class SecretKeyServiceImpl extends ServiceImpl<SecretKeyMapper, SecretKey
         dto.setEnable(key.isEnable());
         dto.setExpirationDate(key.getExpirationDate());
         return dto;
+    }
+
+    @Override
+    public SecretKeyDto getSecretKey(String secretKey, String deviceNumber) {
+        Assert.hasText(secretKey,"密钥不能为空");
+        Assert.hasText(deviceNumber,"设备号不能为空");
+
+        SecretKey key = secretKeyMapper.selectOne(Wrappers.lambdaQuery(SecretKey.class)
+                .eq(SecretKey::getSecretKey, secretKey)
+                .eq(SecretKey::getDeviceNumber, deviceNumber)
+                .eq(SecretKey::isEnable,true)
+        );
+        if (key == null)
+            return null;
+
+        SecretKeyDto dto = new SecretKeyDto();
+        dto.setId(key.getId());
+        dto.setName(key.getName());
+        dto.setSecretKey(key.getSecretKey());
+        dto.setDeviceNumber(key.getDeviceNumber());
+        dto.setEnable(key.isEnable());
+        dto.setExpirationDate(key.getExpirationDate());
+        return dto;
+    }
+
+
+    @Override
+    public boolean bindToken(String token, String deviceNumber) {
+        Assert.hasText(deviceNumber,"设备码不能为空");
+        Assert.hasText(token,"token不能为空");
+        SecretKey tokenResult = secretKeyMapper.selectOne(Wrappers.lambdaQuery(SecretKey.class)
+                .eq(SecretKey::getSecretKey, token)
+        );
+        Assert.notNull(tokenResult,"无效token");
+        Assert.isTrue(StringUtils.isBlank(tokenResult.getDeviceNumber()),"token已经被占用");
+        tokenResult.setDeviceNumber(deviceNumber);
+        secretKeyMapper.updateById(tokenResult);
+        return true;
     }
 
     @Override
@@ -78,9 +116,7 @@ public class SecretKeyServiceImpl extends ServiceImpl<SecretKeyMapper, SecretKey
 
     @Override
     public boolean createSecretKey(SecretKeyRequest request) {
-        Assert.hasText(request.getDeviceNumber(),"设备号不能为空");
         Assert.hasText(request.getName(),"名称不能为空");
-        Assert.hasText(request.getSecretKey(),"密钥不能为空");
         SecretKey record = new SecretKey();
         record.setName(request.getName());
         record.setSecretKey(request.getSecretKey());
