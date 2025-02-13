@@ -71,4 +71,12 @@ public interface SecretKeyService {
      * @param id
      */
     void updateStatus(String id);
+
+
+    /**
+     * 根据token获取对应的网站类型
+     * @param token
+     * @return
+     */
+    List<String> getWebTypeByToken(String token);
 }

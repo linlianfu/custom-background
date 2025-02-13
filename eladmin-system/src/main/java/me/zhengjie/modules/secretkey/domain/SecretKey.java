@@ -29,6 +29,13 @@ public class SecretKey {
     @ApiModelProperty(value = "密钥")
     private String secretKey;
 
+    /**
+     * @see IdentityType
+     */
+    @TableField(value = "sc_identity_type")
+    @ApiModelProperty(value = "身份标识 | 1管理员，2 员工 ")
+    private int identityType;
+
     @TableField(value = "sc_device_number")
     @ApiModelProperty(value = "设备号")
     private String deviceNumber;

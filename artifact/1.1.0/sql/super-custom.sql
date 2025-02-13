@@ -77,3 +77,7 @@ INSERT INTO `sys_roles_menus`(`menu_id`, `role_id`) VALUES (119, '53af3b61e02711
 INSERT INTO `sys_roles_menus`(`menu_id`, `role_id`) VALUES (120, '53af3b61e02711e8a4ec2afb6e36c22c');
 INSERT INTO `sys_roles_menus`(`menu_id`, `role_id`) VALUES (121, '53af3b61e02711e8a4ec2afb6e36c22c');
 
+
+ALTER TABLE cb_secret_key
+ADD sc_identity_type tinyint comment '身份标识 | 1管理员，2 员工 ' AFTER sc_secret_key;
+

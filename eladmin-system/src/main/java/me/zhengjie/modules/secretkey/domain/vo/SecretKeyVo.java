@@ -2,8 +2,11 @@ package me.zhengjie.modules.secretkey.domain.vo;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import me.zhengjie.modules.secretkey.domain.IdentityType;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author eleven
@@ -18,6 +21,18 @@ public class SecretKeyVo {
 
     @ApiModelProperty(value = "密钥")
     private String secretKey;
+
+    /**
+     * @see IdentityType
+     */
+    @ApiModelProperty(value = "身份标识 | 1管理员，2 员工 ")
+    private int identityType;
+
+    /**
+     * @see me.zhengjie.modules.secretkey.domain.WebType
+     */
+    @ApiModelProperty(value = "开放的网站类型")
+    private List<String> webType = new ArrayList<>();
 
     @ApiModelProperty(value = "设备号")
     private String deviceNumber;

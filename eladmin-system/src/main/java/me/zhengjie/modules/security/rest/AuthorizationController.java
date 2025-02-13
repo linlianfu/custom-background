@@ -27,6 +27,7 @@ import me.zhengjie.annotation.rest.AnonymousGetMapping;
 import me.zhengjie.annotation.rest.AnonymousPostMapping;
 import me.zhengjie.config.RsaProperties;
 import me.zhengjie.exception.BadRequestException;
+import me.zhengjie.modules.secretkey.domain.WebType;
 import me.zhengjie.modules.secretkey.service.SecretKeyService;
 import me.zhengjie.modules.secretkey.service.dto.SecretKeyDto;
 import me.zhengjie.modules.security.config.bean.LoginCodeEnum;
@@ -41,6 +42,7 @@ import me.zhengjie.utils.RedisUtils;
 import me.zhengjie.utils.RsaUtils;
 import me.zhengjie.utils.SecurityUtils;
 import me.zhengjie.utils.StringUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -57,7 +59,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -185,7 +189,13 @@ public class AuthorizationController {
             }
         }else {
             secretKeyService.bindToken(secretKey,deviceNumber);
-            result.setValid(true);
+        }
+        result.setValid(true);
+        result.setIdentityType(secret.getIdentityType());
+        if (CollectionUtils.isNotEmpty(secret.getWebType())){
+            List<String> web = new ArrayList<>();
+            secret.getWebType().forEach(p-> web.add(WebType.getValue(p).name()));
+            result.setWebType(web);
         }
         return result;
     }
