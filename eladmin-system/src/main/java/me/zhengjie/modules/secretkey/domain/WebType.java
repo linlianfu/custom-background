@@ -24,7 +24,9 @@ public enum WebType {
 
     TD("tostadora"),
 
-    TSP("teeshirtpalace");
+    TSP("teeshirtpalace"),
+
+    INK("inkspired");
 
     String webSite;
 
