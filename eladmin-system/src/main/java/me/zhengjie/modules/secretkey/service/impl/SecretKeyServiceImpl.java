@@ -130,6 +130,10 @@ public class SecretKeyServiceImpl extends ServiceImpl<SecretKeyMapper, SecretKey
     @Override
     public boolean createSecretKey(SecretKeyRequest request) {
         Assert.hasText(request.getName(),"名称不能为空");
+        Assert.hasText(request.getSecretKey(),"Token不能为空");
+        Long count = secretKeyMapper.selectCount(Wrappers.lambdaQuery(SecretKey.class)
+                .eq(SecretKey::getSecretKey, request.getSecretKey()));
+        Assert.isTrue(count<=0,"Token重复");
         SecretKey record = new SecretKey();
         record.setName(request.getName());
         record.setSecretKey(request.getSecretKey());
@@ -147,9 +151,15 @@ public class SecretKeyServiceImpl extends ServiceImpl<SecretKeyMapper, SecretKey
 
     @Override
     public boolean updateSecretKey(SecretKeyRequest request) {
+        Assert.hasText(request.getName(),"名称不能为空");
+        Assert.hasText(request.getSecretKey(),"Token不能为空");
         SecretKey secretKey = secretKeyMapper.selectById(request.getId());
+
+        Long count = secretKeyMapper.selectCount(Wrappers.lambdaQuery(SecretKey.class)
+                .eq(SecretKey::getSecretKey, request.getSecretKey())
+                .ne(SecretKey::getId, request.getId()));
+        Assert.isTrue(count<=0,"Token重复");
         secretKey.setName(request.getName());
-        secretKey.setDeviceNumber(request.getDeviceNumber());
         secretKey.setSecretKey(request.getSecretKey());
         secretKey.setIdentityType(request.getIdentityType());
         updateById(secretKey);
@@ -165,8 +175,14 @@ public class SecretKeyServiceImpl extends ServiceImpl<SecretKeyMapper, SecretKey
     }
 
     @Override
-    public boolean deleteById(List<String> id) {
-        secretKeyMapper.deleteBatchIds(id);
+    public boolean deleteById(List<String> idList) {
+        for (String id : idList) {
+            SecretKey secretKey = secretKeyMapper.selectById(id);
+            securityObjectMapper.delete(Wrappers.lambdaQuery(SecurityObject.class)
+                    .eq(SecurityObject::getToken,secretKey.getSecretKey())
+                    .eq(SecurityObject::getType, SecurityObjectType.WEB));
+            secretKeyMapper.deleteById(id);
+        }
         return true;
     }
 
