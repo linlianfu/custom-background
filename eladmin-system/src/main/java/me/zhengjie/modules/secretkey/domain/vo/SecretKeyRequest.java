@@ -36,4 +36,7 @@ public class SecretKeyRequest {
     private List<String> webType = new ArrayList<>();
 
     private String deviceNumber;
+
+    @ApiModelProperty(value = "授权的图片解析资源")
+    private List<String> authImageParseId;
 }

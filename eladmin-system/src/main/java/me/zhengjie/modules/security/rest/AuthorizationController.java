@@ -32,12 +32,19 @@ import me.zhengjie.modules.secretkey.service.SecretKeyService;
 import me.zhengjie.modules.secretkey.service.dto.SecretKeyDto;
 import me.zhengjie.modules.security.config.bean.LoginCodeEnum;
 import me.zhengjie.modules.security.config.bean.LoginProperties;
+import me.zhengjie.modules.security.config.bean.LoginRequest;
+import me.zhengjie.modules.security.config.bean.LoginResult;
 import me.zhengjie.modules.security.config.bean.SecretResult;
 import me.zhengjie.modules.security.config.bean.SecurityProperties;
 import me.zhengjie.modules.security.security.TokenProvider;
 import me.zhengjie.modules.security.service.OnlineUserService;
 import me.zhengjie.modules.security.service.dto.AuthUserDto;
 import me.zhengjie.modules.security.service.dto.JwtUserDto;
+import me.zhengjie.modules.website.domain.vo.WebsiteCriteria;
+import me.zhengjie.modules.website.service.ImageParseAuthService;
+import me.zhengjie.modules.website.service.WebsiteService;
+import me.zhengjie.modules.website.service.dto.ImageParseVo;
+import me.zhengjie.modules.website.service.dto.WebsiteVo;
 import me.zhengjie.utils.RedisUtils;
 import me.zhengjie.utils.RsaUtils;
 import me.zhengjie.utils.SecurityUtils;
@@ -63,6 +70,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -91,6 +99,11 @@ public class AuthorizationController {
     private SecretKeyService secretKeyService;
     @Resource
     private LoginProperties loginProperties;
+    @Autowired
+    private WebsiteService websiteService;
+
+    @Autowired
+    private ImageParseAuthService imageParseAuthService;
 
     @Log("用户登录")
     @ApiOperation("登录授权")
@@ -194,8 +207,53 @@ public class AuthorizationController {
         result.setIdentityType(secret.getIdentityType());
         if (CollectionUtils.isNotEmpty(secret.getWebType())){
             List<String> web = new ArrayList<>();
-            secret.getWebType().forEach(p-> web.add(WebType.getValue(p).name()));
+            secret.getWebType().forEach(p-> web.add(Objects.requireNonNull(WebType.getValue(p)).name()));
             result.setWebType(web);
+        }
+        return result;
+    }
+
+    /**
+     * 新版本登录接口
+     * 必须使用Post，否则很容易拿到返回数据
+     * @param request
+     * @return
+     */
+    @ApiOperation("爬虫token验证")
+    @AnonymousPostMapping(value = "/tokenLogin")
+    public LoginResult login(@Validated @RequestBody LoginRequest request){
+
+        String token = request.getToken();
+
+        String deviceNumber = request.getDeviceNumber();
+        log.info("token:"+token+",deviceNumber:"+deviceNumber);
+
+        LoginResult  result = new LoginResult();
+
+        SecretKeyDto secret = secretKeyService.getToken(token);
+        if (secret == null)
+            return result;
+        String tokenDeviceNumber = secret.getDeviceNumber();
+        if (StringUtils.isNotBlank(tokenDeviceNumber)){
+            if (deviceNumber.equals(tokenDeviceNumber)){
+                result.setSuccess(true);
+            }else {
+                log.warn("token错误，与绑定的设备不一致");
+                return result;
+            }
+        }else {
+            secretKeyService.bindToken(token,deviceNumber);
+        }
+        result.setSuccess(true);
+        result.setIdentityType(secret.getIdentityType());
+        if (CollectionUtils.isNotEmpty(secret.getWebType())){
+//            secret.getWebType().forEach(p-> web.add(Objects.requireNonNull(WebType.getValue(p)).name()));
+            WebsiteCriteria criteria = new WebsiteCriteria();
+
+            List<WebsiteVo> websiteVoList = websiteService.listWebsite(criteria);
+            result.setWebsite(websiteVoList);
+            List<ImageParseVo> authImageParse = imageParseAuthService.findAuthImageParse(secret.getId());
+            result.setAuthImageParseResource(authImageParse);
         }
         return result;
     }

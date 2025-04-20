@@ -3,6 +3,7 @@ package me.zhengjie.modules.secretkey.domain.vo;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import me.zhengjie.modules.secretkey.domain.IdentityType;
+import me.zhengjie.modules.website.service.dto.ImageParseVo;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,6 +34,9 @@ public class SecretKeyVo {
      */
     @ApiModelProperty(value = "开放的网站类型")
     private List<String> webType = new ArrayList<>();
+
+    @ApiModelProperty(value = "授权的图片解析资源")
+    private List<ImageParseVo> authImageParse =new ArrayList<>();
 
     @ApiModelProperty(value = "设备号")
     private String deviceNumber;
