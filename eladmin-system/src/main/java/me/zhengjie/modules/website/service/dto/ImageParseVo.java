@@ -19,7 +19,7 @@ public class ImageParseVo {
     @ApiModelProperty(value = "解析的网站")
     private String websiteCode;
 
-    @ApiModelProperty(value = "解析地址")
+    @ApiModelProperty(value = "解析地址 | 代码替换")
     private String parseUrl;
 
     @ApiModelProperty(value = "已授权用户数")

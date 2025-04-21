@@ -27,7 +27,6 @@ import me.zhengjie.annotation.rest.AnonymousGetMapping;
 import me.zhengjie.annotation.rest.AnonymousPostMapping;
 import me.zhengjie.config.RsaProperties;
 import me.zhengjie.exception.BadRequestException;
-import me.zhengjie.modules.secretkey.domain.WebType;
 import me.zhengjie.modules.secretkey.service.SecretKeyService;
 import me.zhengjie.modules.secretkey.service.dto.SecretKeyDto;
 import me.zhengjie.modules.security.config.bean.LoginCodeEnum;
@@ -66,11 +65,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -205,11 +202,7 @@ public class AuthorizationController {
         }
         result.setValid(true);
         result.setIdentityType(secret.getIdentityType());
-        if (CollectionUtils.isNotEmpty(secret.getWebType())){
-            List<String> web = new ArrayList<>();
-            secret.getWebType().forEach(p-> web.add(Objects.requireNonNull(WebType.getValue(p)).name()));
-            result.setWebType(web);
-        }
+        result.setWebType(secret.getWebType());
         return result;
     }
 
@@ -219,7 +212,7 @@ public class AuthorizationController {
      * @param request
      * @return
      */
-    @ApiOperation("爬虫token验证")
+    @ApiOperation("新版爬虫token登录")
     @AnonymousPostMapping(value = "/tokenLogin")
     public LoginResult login(@Validated @RequestBody LoginRequest request){
 
@@ -247,14 +240,13 @@ public class AuthorizationController {
         result.setSuccess(true);
         result.setIdentityType(secret.getIdentityType());
         if (CollectionUtils.isNotEmpty(secret.getWebType())){
-//            secret.getWebType().forEach(p-> web.add(Objects.requireNonNull(WebType.getValue(p)).name()));
             WebsiteCriteria criteria = new WebsiteCriteria();
-
+            criteria.setCodeList(secret.getWebType());
             List<WebsiteVo> websiteVoList = websiteService.listWebsite(criteria);
             result.setWebsite(websiteVoList);
-            List<ImageParseVo> authImageParse = imageParseAuthService.findAuthImageParse(secret.getId());
-            result.setAuthImageParseResource(authImageParse);
         }
+        List<ImageParseVo> authImageParse = imageParseAuthService.findAuthImageParse(secret.getId());
+        result.setAuthImageParseResource(authImageParse);
         return result;
     }
 }

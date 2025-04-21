@@ -1,5 +1,6 @@
 package me.zhengjie.modules.security.config.bean;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -8,13 +9,9 @@ import lombok.Data;
 @Data
 public class LoginRequest {
 
-    /**
-     * 登录token
-     */
+    @ApiModelProperty(value = "登录token")
     String token;
 
-    /**
-     * 登录设备
-     */
+    @ApiModelProperty(value = "登录设备")
     String deviceNumber;
 }
