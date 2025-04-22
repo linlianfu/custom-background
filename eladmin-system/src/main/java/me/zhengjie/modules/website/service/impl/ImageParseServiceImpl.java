@@ -89,6 +89,7 @@ public class ImageParseServiceImpl extends ServiceImpl<ImageParseMapper, ImagePa
     public ImageParse createImageParse(ImageParseRequest request) {
         ImageParse bean = new ImageParse();
         bean.setWebsiteId(request.getWebsiteId());
+        bean.setParseName(request.getParseName());
         bean.setParseUrl(request.getParseUrl());
         bean.setParseType(request.getParseType());
         bean.setCreateId(SecurityUtils.getCurrentUserId());
@@ -100,6 +101,7 @@ public class ImageParseServiceImpl extends ServiceImpl<ImageParseMapper, ImagePa
     @Override
     public boolean updateImageParse(ImageParseRequest request) {
         ImageParse imageParse = mapper.selectById(request.getId());
+        imageParse.setParseName(request.getParseName());
         imageParse.setParseUrl(request.getParseUrl());
         imageParse.setWebsiteId(request.getWebsiteId());
         imageParse.setParseType(request.getParseType());

@@ -31,6 +31,10 @@ public class ImageParse {
     @ApiModelProperty(value = "地址id")
     private String id;
 
+    @TableField(value = "ip_parse_name")
+    @ApiModelProperty(value = "解析名称")
+    private String parseName;
+
     @TableField(value = "ip_ws_id")
     @ApiModelProperty(value = "解析的网站")
     private String websiteId;

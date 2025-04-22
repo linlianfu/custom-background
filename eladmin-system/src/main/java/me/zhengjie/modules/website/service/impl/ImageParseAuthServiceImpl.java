@@ -72,13 +72,13 @@ public class ImageParseAuthServiceImpl extends ServiceImpl<ImageParseAuthMapper,
             for (ImageParse imageParse : imageParses) {
                 ImageParseVo vo = new ImageParseVo();
                 vo.setId(imageParse.getId());
+                vo.setParseName(imageParse.getParseName());
                 vo.setWebsiteId(imageParse.getWebsiteId());
                 Website website = websiteMap.get(imageParse.getWebsiteId());
                 vo.setWebsiteCode(website.getCode());
                 vo.setParseUrl(imageParse.getParseUrl());
                 result.add(vo);
             }
-
         }
         return result;
     }

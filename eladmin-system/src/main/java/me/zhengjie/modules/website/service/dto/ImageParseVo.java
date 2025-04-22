@@ -13,6 +13,9 @@ public class ImageParseVo {
     @ApiModelProperty(value = "地址id")
     private String id;
 
+    @ApiModelProperty(value = "解析名称")
+    private String parseName;
+
     @ApiModelProperty(value = "解析的网站id")
     private String websiteId;
 

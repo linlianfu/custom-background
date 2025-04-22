@@ -2,10 +2,8 @@ package me.zhengjie.modules.security.config.bean;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import me.zhengjie.modules.website.service.dto.ImageParseVo;
-import me.zhengjie.modules.website.service.dto.WebsiteVo;
+import me.zhengjie.modules.website.service.dto.WebsiteAndImageParseVo;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,9 +20,7 @@ public class LoginResult {
     private int identityType;
 
     @ApiModelProperty(value = "已授权的网站")
-    private List<WebsiteVo> website;
+    private List<WebsiteAndImageParseVo> website;
 
-    @ApiModelProperty(value = "授权的图片解析资源 | 代码替换")
-    private List<ImageParseVo> authImageParseResource = new ArrayList<>();
 
 }

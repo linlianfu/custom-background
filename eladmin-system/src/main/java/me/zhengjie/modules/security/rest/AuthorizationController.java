@@ -42,8 +42,11 @@ import me.zhengjie.modules.security.service.dto.JwtUserDto;
 import me.zhengjie.modules.website.domain.vo.WebsiteCriteria;
 import me.zhengjie.modules.website.service.ImageParseAuthService;
 import me.zhengjie.modules.website.service.WebsiteService;
+import me.zhengjie.modules.website.service.dto.ImageParseBaseVo;
 import me.zhengjie.modules.website.service.dto.ImageParseVo;
+import me.zhengjie.modules.website.service.dto.WebsiteAndImageParseVo;
 import me.zhengjie.modules.website.service.dto.WebsiteVo;
+import me.zhengjie.utils.ModelMapperUtils;
 import me.zhengjie.utils.RedisUtils;
 import me.zhengjie.utils.RsaUtils;
 import me.zhengjie.utils.SecurityUtils;
@@ -69,6 +72,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @author Zheng Jie
@@ -243,10 +247,19 @@ public class AuthorizationController {
             WebsiteCriteria criteria = new WebsiteCriteria();
             criteria.setCodeList(secret.getWebType());
             List<WebsiteVo> websiteVoList = websiteService.listWebsite(criteria);
-            result.setWebsite(websiteVoList);
+            List<WebsiteAndImageParseVo> website = ModelMapperUtils.mapList(websiteVoList,WebsiteAndImageParseVo.class);
+
+            List<ImageParseVo> authImageParse = imageParseAuthService.findAuthImageParse(secret.getId());
+            if (CollectionUtils.isNotEmpty(authImageParse)){
+                for (WebsiteAndImageParseVo websiteAndImageParseVo : website) {
+                    List<ImageParseVo> collect = authImageParse.stream().filter(p -> p.getWebsiteId().equals(websiteAndImageParseVo.getId()))
+                            .collect(Collectors.toList());
+                    List<ImageParseBaseVo> imageParses = ModelMapperUtils.mapList(collect,ImageParseBaseVo.class);
+                    websiteAndImageParseVo.setImageParses(imageParses);
+                }
+            }
+            result.setWebsite(website);
         }
-        List<ImageParseVo> authImageParse = imageParseAuthService.findAuthImageParse(secret.getId());
-        result.setAuthImageParseResource(authImageParse);
         return result;
     }
 }

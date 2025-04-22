@@ -32,3 +32,6 @@ update `cb_security_object` set so_content = 'AS' where so_content = 'artistshot
 update `cb_security_object` set so_content = 'TP' where so_content = 'teepublic';
 update `cb_security_object` set so_content = 'DB' where so_content = 'designbyhumans';
 update `cb_security_object` set so_content = 'TL' where so_content = 'threadless';
+
+ALTER TABLE cb_image_parse
+ADD ip_parse_name varchar(255) comment '解析名称' AFTER ip_id
