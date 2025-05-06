@@ -252,7 +252,8 @@ public class AuthorizationController {
             List<ImageParseVo> authImageParse = imageParseAuthService.findAuthImageParse(secret.getId());
             if (CollectionUtils.isNotEmpty(authImageParse)){
                 for (WebsiteAndImageParseVo websiteAndImageParseVo : website) {
-                    List<ImageParseVo> collect = authImageParse.stream().filter(p -> p.getWebsiteId().equals(websiteAndImageParseVo.getId()))
+                    List<ImageParseVo> collect = authImageParse.stream()
+                            .filter(p -> p.getWebsiteId().equals(websiteAndImageParseVo.getId()))
                             .collect(Collectors.toList());
                     List<ImageParseBaseVo> imageParses = ModelMapperUtils.mapList(collect,ImageParseBaseVo.class);
                     websiteAndImageParseVo.setImageParses(imageParses);

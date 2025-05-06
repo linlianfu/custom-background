@@ -35,3 +35,6 @@ update `cb_security_object` set so_content = 'TL' where so_content = 'threadless
 
 ALTER TABLE cb_image_parse
 ADD ip_parse_name varchar(255) comment '解析名称' AFTER ip_id
+ALTER TABLE cb_website ADD ws_pixel_length int COMMENT '图片像素长度' AFTER ws_address;
+ALTER TABLE cb_website ADD ws_pixel_width int COMMENT '图片像素宽度' AFTER ws_pixel_length;
+ALTER TABLE cb_website ADD ws_site_name varchar(255) COMMENT '网站名称' AFTER ws_id;

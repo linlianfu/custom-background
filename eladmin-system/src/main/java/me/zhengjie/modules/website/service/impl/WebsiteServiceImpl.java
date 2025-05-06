@@ -60,7 +60,10 @@ public class WebsiteServiceImpl extends ServiceImpl<WebsiteMapper, Website> impl
     public Website createWebsite(WebsiteRequest request) {
         Website record = new Website();
         record.setCode(request.getCode());
+        record.setSiteName(request.getSiteName());
         record.setAddress(request.getAddress());
+        record.setPixelLength(request.getPixelLength());
+        record.setPixelWidth(request.getPixelWidth());
         record.setCreateId(SecurityUtils.getCurrentUserId());
         record.setCreateTime(new Date());
         save(record);
@@ -71,7 +74,10 @@ public class WebsiteServiceImpl extends ServiceImpl<WebsiteMapper, Website> impl
     public boolean updateWebsite(WebsiteRequest request) {
         Website website = mapper.selectById(request.getId());
         website.setAddress(request.getAddress());
+        website.setSiteName(request.getSiteName());
         website.setCode(request.getCode());
+        website.setPixelLength(request.getPixelLength());
+        website.setPixelWidth(request.getPixelWidth());
         updateById(website);
         return true;
     }
