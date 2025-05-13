@@ -38,6 +38,9 @@ public class SecretKeyVo {
     @ApiModelProperty(value = "授权的图片解析资源")
     private List<ImageParseVo> authImageParse =new ArrayList<>();
 
+    @ApiModelProperty(value = "授权的预览图片解析资源")
+    private List<ImageParseVo> previewImageParse =new ArrayList<>();
+
     @ApiModelProperty(value = "设备号")
     private String deviceNumber;
 

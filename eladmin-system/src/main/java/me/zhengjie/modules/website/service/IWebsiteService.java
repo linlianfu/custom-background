@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * @author eleven
  */
-public interface WebsiteService {
+public interface IWebsiteService {
 
 
     /**

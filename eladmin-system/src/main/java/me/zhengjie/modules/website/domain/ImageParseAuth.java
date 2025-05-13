@@ -28,6 +28,10 @@ public class ImageParseAuth {
     @ApiModelProperty(value = "token id")
     private String tokenId;
 
+    @TableField(value = "ipa_type")
+    @ApiModelProperty(value = "类型 | 1 预览 | 2 下载")
+    private int type;
+
     @TableField(value = "ipa_create_id")
     @ApiModelProperty(value = "创建人")
     private String createId;

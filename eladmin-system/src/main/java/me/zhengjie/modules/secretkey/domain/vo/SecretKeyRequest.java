@@ -39,4 +39,7 @@ public class SecretKeyRequest {
 
     @ApiModelProperty(value = "授权的图片解析资源")
     private List<String> authImageParseId;
+
+    @ApiModelProperty(value = "授权的预览图片解析资源")
+    private List<String> previewImageParseId;
 }

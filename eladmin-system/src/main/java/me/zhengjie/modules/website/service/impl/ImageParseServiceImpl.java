@@ -1,6 +1,7 @@
 package me.zhengjie.modules.website.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Assert;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -47,7 +48,7 @@ public class ImageParseServiceImpl extends ServiceImpl<ImageParseMapper, ImagePa
         LambdaQueryWrapper<ImageParse> wrapper = Wrappers.lambdaQuery(ImageParse.class);
 
         Page<ImageParse> dbPage = new Page<>(page.getCurrent(), page.getSize());
-        dbPage = mapper.selectPage(dbPage, wrapper);
+        dbPage = mapper.selectPage(dbPage, wrapper.orderByDesc(ImageParse::getCreateTime));
         List<ImageParseVo> list = ModelMapperUtils.mapList(dbPage.getRecords(), ImageParseVo.class);
         if (CollectionUtils.isNotEmpty(list)){
             List<Website> websites = websiteMapper.selectBatchIds(list.stream().map(ImageParseVo::getWebsiteId)
@@ -87,6 +88,7 @@ public class ImageParseServiceImpl extends ServiceImpl<ImageParseMapper, ImagePa
 
     @Override
     public ImageParse createImageParse(ImageParseRequest request) {
+        Assert.isTrue(request.getParseUrl().contains("%imageId%"),"缺少图片id占位符，请按照要求格式调整");
         ImageParse bean = new ImageParse();
         bean.setWebsiteId(request.getWebsiteId());
         bean.setParseName(request.getParseName());
@@ -100,6 +102,7 @@ public class ImageParseServiceImpl extends ServiceImpl<ImageParseMapper, ImagePa
 
     @Override
     public boolean updateImageParse(ImageParseRequest request) {
+        Assert.isTrue(request.getParseUrl().contains("%imageId%"),"缺少图片id占位符，请按照要求格式调整");
         ImageParse imageParse = mapper.selectById(request.getId());
         imageParse.setParseName(request.getParseName());
         imageParse.setParseUrl(request.getParseUrl());
@@ -111,6 +114,9 @@ public class ImageParseServiceImpl extends ServiceImpl<ImageParseMapper, ImagePa
 
     @Override
     public boolean deleteById(List<String> id) {
+        Long count = imageParseAuthMapper.selectCount(Wrappers.lambdaQuery(ImageParseAuth.class)
+                .in(ImageParseAuth::getImageParseId, id));
+        Assert.isTrue(count<=0,"当前图片解析地址存在授权记录，无法删除");
         mapper.deleteBatchIds(id);
         return false;
     }

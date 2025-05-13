@@ -17,6 +17,7 @@ import me.zhengjie.modules.secretkey.service.SecretKeyService;
 import me.zhengjie.modules.secretkey.service.dto.SecretKeyDto;
 import me.zhengjie.modules.website.service.ImageParseAuthService;
 import me.zhengjie.modules.website.service.dto.ImageParseVo;
+import me.zhengjie.modules.website.service.dto.UserImageParseVo;
 import me.zhengjie.utils.ModelMapperUtils;
 import me.zhengjie.utils.PageResult;
 import me.zhengjie.utils.PageUtil;
@@ -128,8 +129,17 @@ public class SecretKeyServiceImpl extends ServiceImpl<SecretKeyMapper, SecretKey
         List<SecretKeyVo> list = ModelMapperUtils.mapList(dbPage.getRecords(), SecretKeyVo.class);
         list.forEach(p->{
             p.setWebType(getWebTypeByToken(p.getSecretKey()));
-            List<ImageParseVo> authImageParse = imageParseAuthService.findAuthImageParse(p.getId());
-            p.setAuthImageParse(authImageParse);
+            List<UserImageParseVo> authImageParse = imageParseAuthService.findAuthImageParse(p.getId());
+            List<ImageParseVo> imageParseVos = ModelMapperUtils.mapList(
+                    authImageParse.stream().filter(p1 -> p1.getType() == 2
+                    ).collect(Collectors.toList()),
+                    ImageParseVo.class);
+            p.setAuthImageParse(imageParseVos);
+
+            List<ImageParseVo> previewImageParse = ModelMapperUtils.mapList(authImageParse.stream()
+                            .filter(p1 -> p1.getType() == 1).collect(Collectors.toList()),
+                    ImageParseVo.class);
+            p.setPreviewImageParse(previewImageParse);
         });
 
         return PageUtil.toPage(list, dbPage.getTotal());
@@ -155,7 +165,8 @@ public class SecretKeyServiceImpl extends ServiceImpl<SecretKeyMapper, SecretKey
             request.getWebType().forEach(p->createObject(record.getSecretKey(),SecurityObjectType.WEB,p));
         }
 
-        imageParseAuthService.authImageParse(record.getId(),request.getAuthImageParseId());
+        imageParseAuthService.authImageParse(record.getId(),2,request.getAuthImageParseId());
+        imageParseAuthService.authImageParse(record.getId(),1,request.getPreviewImageParseId());
         return true;
     }
 
@@ -182,7 +193,8 @@ public class SecretKeyServiceImpl extends ServiceImpl<SecretKeyMapper, SecretKey
             request.getWebType().forEach(p->createObject(secretKey.getSecretKey(),SecurityObjectType.WEB,p));
         }
         imageParseAuthService.cancelAuthImageParseByTokenId(request.getId());
-        imageParseAuthService.authImageParse(request.getId(),request.getAuthImageParseId());
+        imageParseAuthService.authImageParse(request.getId(),2,request.getAuthImageParseId());
+        imageParseAuthService.authImageParse(request.getId(),1,request.getPreviewImageParseId());
         return true;
     }
 

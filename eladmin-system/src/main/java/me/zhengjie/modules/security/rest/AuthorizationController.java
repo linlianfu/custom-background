@@ -40,10 +40,13 @@ import me.zhengjie.modules.security.service.OnlineUserService;
 import me.zhengjie.modules.security.service.dto.AuthUserDto;
 import me.zhengjie.modules.security.service.dto.JwtUserDto;
 import me.zhengjie.modules.website.domain.vo.WebsiteCriteria;
+import me.zhengjie.modules.website.service.IProductCategoryService;
+import me.zhengjie.modules.website.service.IWebsiteService;
 import me.zhengjie.modules.website.service.ImageParseAuthService;
-import me.zhengjie.modules.website.service.WebsiteService;
 import me.zhengjie.modules.website.service.dto.ImageParseBaseVo;
 import me.zhengjie.modules.website.service.dto.ImageParseVo;
+import me.zhengjie.modules.website.service.dto.ProductCategoryDto;
+import me.zhengjie.modules.website.service.dto.UserImageParseVo;
 import me.zhengjie.modules.website.service.dto.WebsiteAndImageParseVo;
 import me.zhengjie.modules.website.service.dto.WebsiteVo;
 import me.zhengjie.utils.ModelMapperUtils;
@@ -101,10 +104,13 @@ public class AuthorizationController {
     @Resource
     private LoginProperties loginProperties;
     @Autowired
-    private WebsiteService websiteService;
+    private IWebsiteService IWebsiteService;
 
     @Autowired
     private ImageParseAuthService imageParseAuthService;
+
+    @Autowired
+    private IProductCategoryService productCategoryService;
 
     @Log("用户登录")
     @ApiOperation("登录授权")
@@ -246,17 +252,28 @@ public class AuthorizationController {
         if (CollectionUtils.isNotEmpty(secret.getWebType())){
             WebsiteCriteria criteria = new WebsiteCriteria();
             criteria.setCodeList(secret.getWebType());
-            List<WebsiteVo> websiteVoList = websiteService.listWebsite(criteria);
+            List<WebsiteVo> websiteVoList = IWebsiteService.listWebsite(criteria);
             List<WebsiteAndImageParseVo> website = ModelMapperUtils.mapList(websiteVoList,WebsiteAndImageParseVo.class);
 
-            List<ImageParseVo> authImageParse = imageParseAuthService.findAuthImageParse(secret.getId());
+            List<UserImageParseVo> authImageParse = imageParseAuthService.findAuthImageParse(secret.getId());
             if (CollectionUtils.isNotEmpty(authImageParse)){
                 for (WebsiteAndImageParseVo websiteAndImageParseVo : website) {
                     List<ImageParseVo> collect = authImageParse.stream()
-                            .filter(p -> p.getWebsiteId().equals(websiteAndImageParseVo.getId()))
+                            .filter(p -> p.getWebsiteId().equals(websiteAndImageParseVo.getId())
+                            && p.getType() == 2)
                             .collect(Collectors.toList());
                     List<ImageParseBaseVo> imageParses = ModelMapperUtils.mapList(collect,ImageParseBaseVo.class);
                     websiteAndImageParseVo.setImageParses(imageParses);
+
+                    List<ImageParseVo> collect1 = authImageParse.stream()
+                            .filter(p -> p.getWebsiteId().equals(websiteAndImageParseVo.getId())
+                            && p.getType() == 1)
+                            .collect(Collectors.toList());
+                    List<ImageParseBaseVo> imageParses1 = ModelMapperUtils.mapList(collect1,ImageParseBaseVo.class);
+                    websiteAndImageParseVo.setPreviewImageParse(imageParses1);
+
+                    List<ProductCategoryDto> productCategory = productCategoryService.findProductCategory(websiteAndImageParseVo.getId());
+                    websiteAndImageParseVo.setProductCategory(productCategory);
                 }
             }
             result.setWebsite(website);

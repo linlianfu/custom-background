@@ -13,7 +13,7 @@ import me.zhengjie.modules.website.domain.vo.WebsiteCriteria;
 import me.zhengjie.modules.website.domain.vo.WebsiteRequest;
 import me.zhengjie.modules.website.mapper.ImageParseMapper;
 import me.zhengjie.modules.website.mapper.WebsiteMapper;
-import me.zhengjie.modules.website.service.WebsiteService;
+import me.zhengjie.modules.website.service.IWebsiteService;
 import me.zhengjie.modules.website.service.dto.WebsiteVo;
 import me.zhengjie.utils.ModelMapperUtils;
 import me.zhengjie.utils.PageResult;
@@ -31,7 +31,7 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
-public class WebsiteServiceImpl extends ServiceImpl<WebsiteMapper, Website> implements WebsiteService {
+public class WebsiteServiceImpl extends ServiceImpl<WebsiteMapper, Website> implements IWebsiteService {
 
     @Autowired
     private WebsiteMapper mapper;
@@ -41,7 +41,7 @@ public class WebsiteServiceImpl extends ServiceImpl<WebsiteMapper, Website> impl
     @Override
     public PageResult<WebsiteVo> queryAll(WebsiteCriteria criteria, Page<Object> page) {
         Page<Website> dbPage = new Page<>(page.getCurrent(), page.getSize());
-        dbPage = mapper.selectPage(dbPage, buildCriteria(criteria));
+        dbPage = mapper.selectPage(dbPage, buildCriteria(criteria).orderByDesc(Website::getCreateTime));
         List<WebsiteVo> list = ModelMapperUtils.mapList(dbPage.getRecords(), WebsiteVo.class);
         return PageUtil.toPage(list, dbPage.getTotal());
     }

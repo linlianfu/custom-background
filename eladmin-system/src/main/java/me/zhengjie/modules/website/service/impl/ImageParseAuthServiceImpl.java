@@ -11,7 +11,7 @@ import me.zhengjie.modules.website.mapper.ImageParseAuthMapper;
 import me.zhengjie.modules.website.mapper.ImageParseMapper;
 import me.zhengjie.modules.website.mapper.WebsiteMapper;
 import me.zhengjie.modules.website.service.ImageParseAuthService;
-import me.zhengjie.modules.website.service.dto.ImageParseVo;
+import me.zhengjie.modules.website.service.dto.UserImageParseVo;
 import me.zhengjie.utils.SecurityUtils;
 import me.zhengjie.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,11 +37,12 @@ public class ImageParseAuthServiceImpl extends ServiceImpl<ImageParseAuthMapper,
     private WebsiteMapper websiteMapper;
 
     @Override
-    public boolean authImageParse(String tokenId, List<String> imageParseIds) {
+    public boolean authImageParse(String tokenId,int type, List<String> imageParseIds) {
         for (String imageParseId : imageParseIds) {
             ImageParseAuth auth = new ImageParseAuth();
             auth.setTokenId(tokenId);
             auth.setImageParseId(imageParseId);
+            auth.setType(type);
             auth.setCreateId(SecurityUtils.getCurrentUserId());
             auth.setCreateTime(new Date());
             save(auth);
@@ -59,25 +60,33 @@ public class ImageParseAuthServiceImpl extends ServiceImpl<ImageParseAuthMapper,
     }
 
     @Override
-    public List<ImageParseVo> findAuthImageParse(String tokenId) {
-        List<ImageParseVo> result = new ArrayList<>();
+    public List<UserImageParseVo> findAuthImageParse(String tokenId) {
+        List<UserImageParseVo> result = new ArrayList<>();
         List<ImageParseAuth> imageParseAuths = mapper.selectList(Wrappers.lambdaQuery(ImageParseAuth.class)
                 .eq(ImageParseAuth::getTokenId, tokenId));
         if (CollectionUtils.isNotEmpty(imageParseAuths)){
             List<ImageParse> imageParses = imageParseMapper.selectBatchIds(imageParseAuths.stream()
                     .map(ImageParseAuth::getImageParseId).collect(Collectors.toList()));
+            Map<String, ImageParse> imageParseMap = imageParses.stream()
+                    .collect(Collectors.toMap(ImageParse::getId, p -> p));
+
+
             List<Website> websiteList = websiteMapper.selectBatchIds(imageParses.stream()
                     .map(ImageParse::getWebsiteId).collect(Collectors.toList()));
             Map<String, Website> websiteMap = websiteList.stream().collect(Collectors.toMap(Website::getId, p -> p));
-            for (ImageParse imageParse : imageParses) {
-                ImageParseVo vo = new ImageParseVo();
-                vo.setId(imageParse.getId());
-                vo.setParseName(imageParse.getParseName());
-                vo.setWebsiteId(imageParse.getWebsiteId());
-                Website website = websiteMap.get(imageParse.getWebsiteId());
-                vo.setWebsiteCode(website.getCode());
-                vo.setParseUrl(imageParse.getParseUrl());
-                result.add(vo);
+            for (ImageParseAuth imageParseAuth : imageParseAuths) {
+                ImageParse imageParse = imageParseMap.get(imageParseAuth.getImageParseId());
+                if (imageParse != null){
+                    UserImageParseVo vo = new UserImageParseVo();
+                    vo.setId(imageParse.getId());
+                    vo.setParseName(imageParse.getParseName());
+                    vo.setWebsiteId(imageParse.getWebsiteId());
+                    Website website = websiteMap.get(imageParse.getWebsiteId());
+                    vo.setWebsiteCode(website.getCode());
+                    vo.setParseUrl(imageParse.getParseUrl());
+                    vo.setType(imageParseAuth.getType());
+                    result.add(vo);
+                }
             }
         }
         return result;

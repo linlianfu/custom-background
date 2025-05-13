@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.annotation.Log;
 import me.zhengjie.modules.website.domain.vo.WebsiteCriteria;
 import me.zhengjie.modules.website.domain.vo.WebsiteRequest;
-import me.zhengjie.modules.website.service.WebsiteService;
+import me.zhengjie.modules.website.service.IWebsiteService;
 import me.zhengjie.modules.website.service.dto.WebsiteVo;
 import me.zhengjie.utils.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ import java.util.List;
 public class WebsiteServiceController {
 
     @Autowired
-    private WebsiteService service;
+    private IWebsiteService service;
 
 
     @ApiOperation("网站分页")
