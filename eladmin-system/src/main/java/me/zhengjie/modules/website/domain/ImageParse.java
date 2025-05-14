@@ -50,6 +50,11 @@ public class ImageParse {
     @ApiModelProperty(value = "解析类型 | 1 PNG | 2 JPG")
     private int parseType;
 
+    @TableField(value = "ip_available_range")
+    @ApiModelProperty(value = "可用范围 | -1 不限 | 1 内部 | 2 外部")
+    private int availableRange;
+
+
     @TableField(value = "ip_create_id")
     @ApiModelProperty(value = "创建人")
     private String createId;

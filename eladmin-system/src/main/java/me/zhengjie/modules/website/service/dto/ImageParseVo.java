@@ -25,6 +25,12 @@ public class ImageParseVo {
     @ApiModelProperty(value = "解析地址 | 代码替换")
     private String parseUrl;
 
+    /**
+     * @see me.zhengjie.modules.website.domain.ImageParseAvailableRange
+     */
+    @ApiModelProperty(value = "可用范围")
+    private int availableRange;
+
     @ApiModelProperty(value = "已授权用户数")
     private int authUserCount;
 

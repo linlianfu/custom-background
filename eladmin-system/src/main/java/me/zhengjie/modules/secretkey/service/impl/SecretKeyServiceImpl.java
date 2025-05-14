@@ -156,6 +156,7 @@ public class SecretKeyServiceImpl extends ServiceImpl<SecretKeyMapper, SecretKey
         record.setName(request.getName());
         record.setSecretKey(request.getSecretKey());
         record.setIdentityType(request.getIdentityType());
+        record.setBelong(request.getBelong());
         record.setDeviceNumber(request.getDeviceNumber());
         record.setEnable(true);
         record.setCreateTime(new Date());
@@ -164,7 +165,6 @@ public class SecretKeyServiceImpl extends ServiceImpl<SecretKeyMapper, SecretKey
         if (CollectionUtils.isNotEmpty(request.getWebType())){
             request.getWebType().forEach(p->createObject(record.getSecretKey(),SecurityObjectType.WEB,p));
         }
-
         imageParseAuthService.authImageParse(record.getId(),2,request.getAuthImageParseId());
         imageParseAuthService.authImageParse(record.getId(),1,request.getPreviewImageParseId());
         return true;
@@ -183,6 +183,7 @@ public class SecretKeyServiceImpl extends ServiceImpl<SecretKeyMapper, SecretKey
         secretKey.setName(request.getName());
         secretKey.setSecretKey(request.getSecretKey());
         secretKey.setIdentityType(request.getIdentityType());
+        secretKey.setBelong(request.getBelong());
         updateById(secretKey);
 
         securityObjectMapper.delete(Wrappers.lambdaQuery(SecurityObject.class)

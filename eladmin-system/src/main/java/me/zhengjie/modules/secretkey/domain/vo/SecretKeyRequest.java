@@ -30,6 +30,12 @@ public class SecretKeyRequest {
     private int identityType;
 
     /**
+     * @see me.zhengjie.modules.secretkey.domain.TokenBelongConstant
+     */
+    @ApiModelProperty(value = "token归属")
+    private int belong;
+
+    /**
      * @see me.zhengjie.modules.secretkey.domain.WebType
      */
     @ApiModelProperty(value = "开放的网站类型")

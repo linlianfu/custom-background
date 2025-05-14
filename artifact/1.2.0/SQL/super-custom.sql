@@ -33,10 +33,13 @@ update `cb_security_object` set so_content = 'TP' where so_content = 'teepublic'
 update `cb_security_object` set so_content = 'DB' where so_content = 'designbyhumans';
 update `cb_security_object` set so_content = 'TL' where so_content = 'threadless';
 
-ALTER TABLE cb_image_parse
-ADD ip_parse_name varchar(255) comment '解析名称' AFTER ip_id
+ALTER TABLE cb_image_parse ADD ip_parse_name varchar(255) comment '解析名称' AFTER ip_id
 ALTER TABLE cb_website ADD ws_pixel_length int COMMENT '图片像素长度' AFTER ws_address;
 ALTER TABLE cb_website ADD ws_pixel_width int COMMENT '图片像素宽度' AFTER ws_pixel_length;
 ALTER TABLE cb_website ADD ws_site_name varchar(255) COMMENT '网站名称' AFTER ws_id;
 ALTER TABLE cb_image_parse_auth ADD ipa_type tinyint(4) COMMENT '类型 | 1 预览 | 2 下载' AFTER ipa_sc_id;
 update cb_image_parse_auth set ipa_type = 2;
+
+ALTER TABLE cb_image_parse ADD ip_available_range tinyint(4) COMMENT '可用范围 | -1 不限 | 1 内部 | 2 外部 ' AFTER ip_parse_type;
+
+ALTER TABLE cb_secret_key ADD sc_belong tinyint(4) COMMENT '归属 | 1 内部 | 2 外部' AFTER sc_device_number;

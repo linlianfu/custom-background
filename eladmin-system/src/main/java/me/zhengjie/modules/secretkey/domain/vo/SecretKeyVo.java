@@ -29,6 +29,9 @@ public class SecretKeyVo {
     @ApiModelProperty(value = "身份标识 | 1管理员，2 员工 ")
     private int identityType;
 
+    @ApiModelProperty(value = "归属 | 1 内部 | 2 外部")
+    private int belong;
+
     /**
      * @see me.zhengjie.modules.secretkey.domain.WebType
      */

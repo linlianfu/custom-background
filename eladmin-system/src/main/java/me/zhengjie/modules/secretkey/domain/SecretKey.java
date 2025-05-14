@@ -40,6 +40,10 @@ public class SecretKey {
     @ApiModelProperty(value = "设备号")
     private String deviceNumber;
 
+    @TableField(value = "sc_belong")
+    @ApiModelProperty(value = "归属 | 1 内部 | 2 外部")
+    private int belong;
+
     @TableField(value = "sc_enable")
     @ApiModelProperty(value = "是否可用")
     private boolean enable;

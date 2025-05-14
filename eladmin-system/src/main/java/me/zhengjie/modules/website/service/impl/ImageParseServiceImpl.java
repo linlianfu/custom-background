@@ -94,6 +94,7 @@ public class ImageParseServiceImpl extends ServiceImpl<ImageParseMapper, ImagePa
         bean.setParseName(request.getParseName());
         bean.setParseUrl(request.getParseUrl());
         bean.setParseType(request.getParseType());
+        bean.setAvailableRange(request.getAvailableRange());
         bean.setCreateId(SecurityUtils.getCurrentUserId());
         bean.setCreateTime(new Date());
         save(bean);
@@ -108,6 +109,7 @@ public class ImageParseServiceImpl extends ServiceImpl<ImageParseMapper, ImagePa
         imageParse.setParseUrl(request.getParseUrl());
         imageParse.setWebsiteId(request.getWebsiteId());
         imageParse.setParseType(request.getParseType());
+        imageParse.setAvailableRange(request.getAvailableRange());
         updateById(imageParse);
         return true;
     }

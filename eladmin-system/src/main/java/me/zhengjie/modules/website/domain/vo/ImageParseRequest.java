@@ -27,4 +27,10 @@ public class ImageParseRequest {
      */
     @ApiModelProperty(value = "解析类型 | 1 PNG | 2 JPG")
     private int parseType;
+
+    /**
+     * @see me.zhengjie.modules.website.domain.ImageParseAvailableRange
+     */
+    @ApiModelProperty(value = "可用范围")
+    private int availableRange;
 }
