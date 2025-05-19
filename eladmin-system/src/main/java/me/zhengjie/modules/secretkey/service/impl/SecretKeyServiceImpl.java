@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import me.zhengjie.modules.secretkey.domain.SecretKey;
 import me.zhengjie.modules.secretkey.domain.SecurityObject;
 import me.zhengjie.modules.secretkey.domain.SecurityObjectType;
+import me.zhengjie.modules.secretkey.domain.TokenBelongConstant;
 import me.zhengjie.modules.secretkey.domain.vo.SecretKeyCriteria;
 import me.zhengjie.modules.secretkey.domain.vo.SecretKeyRequest;
 import me.zhengjie.modules.secretkey.domain.vo.SecretKeyVo;
@@ -15,6 +16,9 @@ import me.zhengjie.modules.secretkey.mapper.SecretKeyMapper;
 import me.zhengjie.modules.secretkey.mapper.SecurityObjectMapper;
 import me.zhengjie.modules.secretkey.service.SecretKeyService;
 import me.zhengjie.modules.secretkey.service.dto.SecretKeyDto;
+import me.zhengjie.modules.website.domain.ImageParse;
+import me.zhengjie.modules.website.domain.ImageParseAvailableRange;
+import me.zhengjie.modules.website.mapper.ImageParseMapper;
 import me.zhengjie.modules.website.service.ImageParseAuthService;
 import me.zhengjie.modules.website.service.dto.ImageParseVo;
 import me.zhengjie.modules.website.service.dto.UserImageParseVo;
@@ -45,6 +49,8 @@ public class SecretKeyServiceImpl extends ServiceImpl<SecretKeyMapper, SecretKey
     private SecurityObjectMapper securityObjectMapper;
     @Autowired
     private ImageParseAuthService imageParseAuthService;
+    @Autowired
+    private ImageParseMapper imageParseMapper;
 
 
 
@@ -152,6 +158,8 @@ public class SecretKeyServiceImpl extends ServiceImpl<SecretKeyMapper, SecretKey
         Long count = secretKeyMapper.selectCount(Wrappers.lambdaQuery(SecretKey.class)
                 .eq(SecretKey::getSecretKey, request.getSecretKey()));
         Assert.isTrue(count<=0,"Token重复");
+        validAvailableRange(request.getBelong(),request.getAuthImageParseId());
+        validAvailableRange(request.getBelong(),request.getPreviewImageParseId());
         SecretKey record = new SecretKey();
         record.setName(request.getName());
         record.setSecretKey(request.getSecretKey());
@@ -180,6 +188,10 @@ public class SecretKeyServiceImpl extends ServiceImpl<SecretKeyMapper, SecretKey
                 .eq(SecretKey::getSecretKey, request.getSecretKey())
                 .ne(SecretKey::getId, request.getId()));
         Assert.isTrue(count<=0,"Token重复");
+
+        validAvailableRange(request.getBelong(),request.getAuthImageParseId());
+        validAvailableRange(request.getBelong(),request.getPreviewImageParseId());
+
         secretKey.setName(request.getName());
         secretKey.setSecretKey(request.getSecretKey());
         secretKey.setIdentityType(request.getIdentityType());
@@ -244,5 +256,21 @@ public class SecretKeyServiceImpl extends ServiceImpl<SecretKeyMapper, SecretKey
         object.setContent(content);
         object.setCreateTime(new Date());
         securityObjectMapper.insert(object);
+    }
+
+    private void validAvailableRange(int tokenBelong,List<String> imageParseIds){
+        if (CollectionUtils.isNotEmpty(imageParseIds)){
+            List<ImageParse> imageParses = imageParseMapper.selectBatchIds(imageParseIds);
+            List<ImageParse> collect = imageParses.stream().filter(p -> p.getAvailableRange() != ImageParseAvailableRange.NOT_LIMIT)
+                    .collect(Collectors.toList());
+            if (CollectionUtils.isNotEmpty(collect)){
+                String tokenBelongStr = tokenBelong == TokenBelongConstant.INTERNAL ? "内部":"外部";
+                String imageParseRange =  "内部".equals(tokenBelongStr) ? "外部":"内部";
+                Assert.isTrue(collect.stream().noneMatch(p->p.getAvailableRange()!=tokenBelong),
+                        "请勿给"+tokenBelongStr+"token授权"+imageParseRange+"资源");
+            }
+        }
+
+
     }
 }
