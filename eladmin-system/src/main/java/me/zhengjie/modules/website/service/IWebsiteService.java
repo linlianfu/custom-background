@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import me.zhengjie.modules.website.domain.Website;
 import me.zhengjie.modules.website.domain.vo.WebsiteCriteria;
 import me.zhengjie.modules.website.domain.vo.WebsiteRequest;
+import me.zhengjie.modules.website.service.dto.FieldValueDto;
 import me.zhengjie.modules.website.service.dto.WebsiteVo;
 import me.zhengjie.utils.PageResult;
 
@@ -52,4 +53,11 @@ public interface IWebsiteService {
      * @return
      */
     boolean deleteById(List<String> id);
+
+    /**
+     * 获取指定网站的排序字段值
+     * @param websiteId
+     * @return
+     */
+    List<FieldValueDto> getSortFieldValue(String websiteId);
 }

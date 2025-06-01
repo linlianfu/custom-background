@@ -17,19 +17,22 @@ public class ProductCategoryServiceImpl implements IProductCategoryService {
 
     @Override
     public List<ProductCategoryDto> findProductCategory(String websiteCode) {
-        List<ProductCategoryDto> list = new ArrayList<>();
         ProductCategoryDto tees = new ProductCategoryDto();
+        List<ProductCategoryDto> list = new ArrayList<>();
+        tees.setId("001");
         tees.setCode("u-tees");
         tees.setName("t shirt");
         list.add(tees);
 
 
         ProductCategoryDto pillowCase = new ProductCategoryDto();
+        pillowCase.setId("002");
         pillowCase.setCode("u-pillows");
         pillowCase.setName("pillow");
         list.add(pillowCase);
 
         ProductCategoryDto stickers = new ProductCategoryDto();
+        stickers.setId("003");
         stickers.setCode("all-stickers");
         stickers.setName("stickers");
         list.add(stickers);

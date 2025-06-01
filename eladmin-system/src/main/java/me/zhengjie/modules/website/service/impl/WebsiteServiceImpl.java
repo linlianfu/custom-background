@@ -14,11 +14,13 @@ import me.zhengjie.modules.website.domain.vo.WebsiteRequest;
 import me.zhengjie.modules.website.mapper.ImageParseMapper;
 import me.zhengjie.modules.website.mapper.WebsiteMapper;
 import me.zhengjie.modules.website.service.IWebsiteService;
+import me.zhengjie.modules.website.service.dto.FieldValueDto;
 import me.zhengjie.modules.website.service.dto.WebsiteVo;
 import me.zhengjie.utils.ModelMapperUtils;
 import me.zhengjie.utils.PageResult;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.SecurityUtils;
+import me.zhengjie.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -92,11 +94,45 @@ public class WebsiteServiceImpl extends ServiceImpl<WebsiteMapper, Website> impl
     }
 
 
+    @Override
+    public List<FieldValueDto> getSortFieldValue(String websiteId) {
+        List<FieldValueDto> list = new ArrayList<>();
+        FieldValueDto relevant = new FieldValueDto();
+        relevant.setTitle("Most Relevant");
+        relevant.setValue("relevant");
+        relevant.setFieldName("sortOrder");
+        relevant.buildExpress();
+        list.add(relevant);
+
+        FieldValueDto bestSelling = new FieldValueDto();
+        bestSelling.setTitle("Best Selling");
+        bestSelling.setValue("top%20selling");
+        bestSelling.setFieldName("sortOrder");
+        bestSelling.buildExpress();
+        list.add(bestSelling);
+
+        FieldValueDto newest = new FieldValueDto();
+        newest.setTitle("Newest");
+        newest.setValue("recent");
+        newest.setFieldName("sortOrder");
+        newest.buildExpress();
+        list.add(newest);
+
+        return list;
+    }
+
     public LambdaQueryWrapper<Website> buildCriteria(WebsiteCriteria criteria){
         LambdaQueryWrapper<Website> wrapper = Wrappers.lambdaQuery(Website.class);
         if (CollectionUtils.isNotEmpty(criteria.getCodeList())){
             wrapper.in(Website::getCode,criteria.getCodeList());
         }
+        if (StringUtils.isNotBlank(criteria.getCode())){
+            wrapper.eq(Website::getCode,criteria.getCode());
+        }
+        if (StringUtils.isNotBlank(criteria.getSiteName())){
+            wrapper.like(Website::getSiteName,criteria.getSiteName());
+        }
+
         return wrapper;
     }
 }

@@ -31,7 +31,7 @@ import java.util.List;
 @RestController
 @Api(tags = "网站管理")
 @RequestMapping("/api/website")
-public class WebsiteServiceController {
+public class WebsiteController {
 
     @Autowired
     private IWebsiteService service;

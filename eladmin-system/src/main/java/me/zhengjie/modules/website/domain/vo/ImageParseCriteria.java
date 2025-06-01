@@ -11,4 +11,7 @@ public class ImageParseCriteria {
 
     @ApiModelProperty(value = "解析的网站")
     private String websiteId;
+
+    @ApiModelProperty(value = "解析名称")
+    private String parseName;
 }

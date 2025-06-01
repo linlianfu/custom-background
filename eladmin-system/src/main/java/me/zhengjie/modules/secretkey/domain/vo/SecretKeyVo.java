@@ -3,6 +3,7 @@ package me.zhengjie.modules.secretkey.domain.vo;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import me.zhengjie.modules.secretkey.domain.IdentityType;
+import me.zhengjie.modules.secretkey.service.dto.PermissionGroup;
 import me.zhengjie.modules.website.service.dto.ImageParseVo;
 
 import java.util.ArrayList;
@@ -32,6 +33,9 @@ public class SecretKeyVo {
     @ApiModelProperty(value = "归属 | 1 内部 | 2 外部")
     private int belong;
 
+    @ApiModelProperty(value = "安全对象内容")
+    private PermissionGroup permissionGroup;
+
     /**
      * @see me.zhengjie.modules.secretkey.domain.WebType
      */
@@ -55,4 +59,7 @@ public class SecretKeyVo {
 
     @ApiModelProperty(value = "创建时间")
     private Date createTime;
+
+    @ApiModelProperty(value = "最后登录时间")
+    private Date lastLoginTime;
 }

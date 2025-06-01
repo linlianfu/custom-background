@@ -55,4 +55,8 @@ public class SecretKey {
     @TableField(value = "sc_create_time")
     @ApiModelProperty(value = "创建时间")
     private Date createTime;
+
+    @TableField(value = "sc_last_login_time")
+    @ApiModelProperty(value = "最后登录时间")
+    private Date lastLoginTime;
 }

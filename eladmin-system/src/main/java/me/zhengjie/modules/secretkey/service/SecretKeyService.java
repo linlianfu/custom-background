@@ -1,12 +1,15 @@
 package me.zhengjie.modules.secretkey.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import me.zhengjie.modules.secretkey.domain.SecurityObject;
 import me.zhengjie.modules.secretkey.domain.vo.SecretKeyCriteria;
 import me.zhengjie.modules.secretkey.domain.vo.SecretKeyRequest;
 import me.zhengjie.modules.secretkey.domain.vo.SecretKeyVo;
+import me.zhengjie.modules.secretkey.service.dto.PermissionGroup;
 import me.zhengjie.modules.secretkey.service.dto.SecretKeyDto;
 import me.zhengjie.utils.PageResult;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -79,4 +82,30 @@ public interface SecretKeyService {
      * @return
      */
     List<String> getWebTypeByToken(String token);
+
+
+    /**
+     * 更新用户最后登录时间
+     * @param tokenId
+     * @param loginDate
+     * @return
+     */
+    boolean updateLastLoginTime(String tokenId, Date loginDate);
+
+
+    /**
+     * 获取指定用户的权限组
+     * @param tokenId
+     * @param type
+     * @see me.zhengjie.modules.secretkey.domain.SecurityObjectType
+     * @return
+     */
+    List<SecurityObject> getPermissionGroup(String tokenId,int type);
+
+    /**
+     * 转换安全对象
+     * @param securityObjectList
+     * @return
+     */
+     PermissionGroup convertSecurityObject(List<SecurityObject> securityObjectList);
 }

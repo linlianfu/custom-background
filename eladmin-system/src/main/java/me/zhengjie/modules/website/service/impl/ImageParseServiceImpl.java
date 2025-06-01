@@ -21,6 +21,7 @@ import me.zhengjie.utils.ModelMapperUtils;
 import me.zhengjie.utils.PageResult;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.SecurityUtils;
+import me.zhengjie.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,6 +48,12 @@ public class ImageParseServiceImpl extends ServiceImpl<ImageParseMapper, ImagePa
     public PageResult<ImageParseVo> queryAll(ImageParseCriteria criteria, Page<Object> page) {
         LambdaQueryWrapper<ImageParse> wrapper = Wrappers.lambdaQuery(ImageParse.class);
 
+        if (StringUtils.isNotBlank(criteria.getParseName())){
+            wrapper.like(ImageParse::getParseName,criteria.getParseName());
+        }
+        if(StringUtils.isNotBlank(criteria.getWebsiteId())){
+            wrapper.eq(ImageParse::getWebsiteId,criteria.getWebsiteId());
+        }
         Page<ImageParse> dbPage = new Page<>(page.getCurrent(), page.getSize());
         dbPage = mapper.selectPage(dbPage, wrapper.orderByDesc(ImageParse::getCreateTime));
         List<ImageParseVo> list = ModelMapperUtils.mapList(dbPage.getRecords(), ImageParseVo.class);

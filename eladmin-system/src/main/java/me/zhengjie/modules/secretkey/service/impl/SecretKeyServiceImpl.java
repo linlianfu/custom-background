@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.modules.secretkey.domain.SecretKey;
 import me.zhengjie.modules.secretkey.domain.SecurityObject;
+import me.zhengjie.modules.secretkey.domain.SecurityObjectContentConstant;
 import me.zhengjie.modules.secretkey.domain.SecurityObjectType;
 import me.zhengjie.modules.secretkey.domain.TokenBelongConstant;
 import me.zhengjie.modules.secretkey.domain.vo.SecretKeyCriteria;
@@ -15,6 +16,7 @@ import me.zhengjie.modules.secretkey.domain.vo.SecretKeyVo;
 import me.zhengjie.modules.secretkey.mapper.SecretKeyMapper;
 import me.zhengjie.modules.secretkey.mapper.SecurityObjectMapper;
 import me.zhengjie.modules.secretkey.service.SecretKeyService;
+import me.zhengjie.modules.secretkey.service.dto.PermissionGroup;
 import me.zhengjie.modules.secretkey.service.dto.SecretKeyDto;
 import me.zhengjie.modules.website.domain.ImageParse;
 import me.zhengjie.modules.website.domain.ImageParseAvailableRange;
@@ -146,6 +148,10 @@ public class SecretKeyServiceImpl extends ServiceImpl<SecretKeyMapper, SecretKey
                             .filter(p1 -> p1.getType() == 1).collect(Collectors.toList()),
                     ImageParseVo.class);
             p.setPreviewImageParse(previewImageParse);
+
+
+            List<SecurityObject> permissionGroup = getPermissionGroup(p.getId(), SecurityObjectType.VIEW);
+            p.setPermissionGroup(convertSecurityObject(permissionGroup));
         });
 
         return PageUtil.toPage(list, dbPage.getTotal());
@@ -173,6 +179,17 @@ public class SecretKeyServiceImpl extends ServiceImpl<SecretKeyMapper, SecretKey
         if (CollectionUtils.isNotEmpty(request.getWebType())){
             request.getWebType().forEach(p->createObject(record.getSecretKey(),SecurityObjectType.WEB,p));
         }
+
+        PermissionGroup permissionGroup = request.getPermissionGroup();
+        if (permissionGroup != null){
+            if (permissionGroup.isShowCustomRule()){
+                createObject(SecurityObjectType.VIEW,record.getId(),SecurityObjectContentConstant.CUSTOM_RULE);
+            }
+            if (permissionGroup.isShowRuleContent()){
+                createObject(SecurityObjectType.VIEW,record.getId(),SecurityObjectContentConstant.RULE_CONTENT);
+            }
+        }
+
         imageParseAuthService.authImageParse(record.getId(),2,request.getAuthImageParseId());
         imageParseAuthService.authImageParse(record.getId(),1,request.getPreviewImageParseId());
         return true;
@@ -202,9 +219,24 @@ public class SecretKeyServiceImpl extends ServiceImpl<SecretKeyMapper, SecretKey
                 .eq(SecurityObject::getToken,secretKey.getSecretKey())
                 .eq(SecurityObject::getType, SecurityObjectType.WEB));
 
+        securityObjectMapper.delete(Wrappers.lambdaQuery(SecurityObject.class)
+                .eq(SecurityObject::getTokenId,secretKey.getId())
+                .eq(SecurityObject::getType, SecurityObjectType.VIEW));
+
         if (CollectionUtils.isNotEmpty(request.getWebType())){
             request.getWebType().forEach(p->createObject(secretKey.getSecretKey(),SecurityObjectType.WEB,p));
         }
+
+        PermissionGroup permissionGroup = request.getPermissionGroup();
+        if (permissionGroup != null){
+            if (permissionGroup.isShowCustomRule()){
+                createObject(SecurityObjectType.VIEW,secretKey.getId(),SecurityObjectContentConstant.CUSTOM_RULE);
+            }
+            if (permissionGroup.isShowRuleContent()){
+                createObject(SecurityObjectType.VIEW,secretKey.getId(),SecurityObjectContentConstant.RULE_CONTENT);
+            }
+        }
+
         imageParseAuthService.cancelAuthImageParseByTokenId(request.getId());
         imageParseAuthService.authImageParse(request.getId(),2,request.getAuthImageParseId());
         imageParseAuthService.authImageParse(request.getId(),1,request.getPreviewImageParseId());
@@ -218,6 +250,11 @@ public class SecretKeyServiceImpl extends ServiceImpl<SecretKeyMapper, SecretKey
             securityObjectMapper.delete(Wrappers.lambdaQuery(SecurityObject.class)
                     .eq(SecurityObject::getToken,secretKey.getSecretKey())
                     .eq(SecurityObject::getType, SecurityObjectType.WEB));
+
+            securityObjectMapper.delete(Wrappers.lambdaQuery(SecurityObject.class)
+                    .eq(SecurityObject::getTokenId,secretKey.getId())
+                    .eq(SecurityObject::getType, SecurityObjectType.VIEW));
+
             secretKeyMapper.deleteById(id);
             imageParseAuthService.cancelAuthImageParseByTokenId(id);
         }
@@ -249,10 +286,47 @@ public class SecretKeyServiceImpl extends ServiceImpl<SecretKeyMapper, SecretKey
     }
 
 
-    private void createObject(String token,int type,String content){
+    @Override
+    public boolean updateLastLoginTime(String tokenId, Date loginDate) {
+        SecretKey secretKey = secretKeyMapper.selectById(tokenId);
+        secretKey.setLastLoginTime(loginDate);
+        secretKeyMapper.updateById(secretKey);
+        return true;
+    }
+
+
+    @Override
+    public List<SecurityObject> getPermissionGroup(String tokenId,int type) {
+        return securityObjectMapper.selectList(Wrappers.lambdaQuery(SecurityObject.class)
+                .eq(SecurityObject::getTokenId,tokenId)
+                .eq(SecurityObject::getType, SecurityObjectType.VIEW));
+    }
+
+    @Override
+    public PermissionGroup convertSecurityObject(List<SecurityObject> securityObjectList) {
+        PermissionGroup permissionGroup = new PermissionGroup();
+        permissionGroup.setShowRuleContent(
+                securityObjectList.stream().anyMatch(p-> SecurityObjectContentConstant.RULE_CONTENT.equals(p.getContent()))
+        );
+        permissionGroup.setShowCustomRule(
+                securityObjectList.stream().anyMatch(p-> SecurityObjectContentConstant.CUSTOM_RULE.equals(p.getContent()))
+        );
+        return permissionGroup;
+    }
+
+    private void createObject(String token, int type, String content){
         SecurityObject object = new SecurityObject();
         object.setToken(token);
         object.setType(type);
+        object.setContent(content);
+        object.setCreateTime(new Date());
+        securityObjectMapper.insert(object);
+    }
+
+    private void createObject(int type,String tokenId,String content){
+        SecurityObject object = new SecurityObject();
+        object.setType(type);
+        object.setTokenId(tokenId);
         object.setContent(content);
         object.setCreateTime(new Date());
         securityObjectMapper.insert(object);
@@ -271,6 +345,6 @@ public class SecretKeyServiceImpl extends ServiceImpl<SecretKeyMapper, SecretKey
             }
         }
 
-
     }
+
 }

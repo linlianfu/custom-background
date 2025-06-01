@@ -15,4 +15,7 @@ public class ImageDataDto {
     @ApiModelProperty(value = "图片标题")
     private String title;
 
+    @ApiModelProperty(value = "图片下载地址 | 实际下载地址")
+    private String downloadUrl;
+
 }

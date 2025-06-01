@@ -43,3 +43,82 @@ update cb_image_parse_auth set ipa_type = 2;
 ALTER TABLE cb_image_parse ADD ip_available_range tinyint(4) COMMENT '可用范围 | -1 不限 | 1 内部 | 2 外部 ' AFTER ip_parse_type;
 
 ALTER TABLE cb_secret_key ADD sc_belong tinyint(4) COMMENT '归属 | 1 内部 | 2 外部' AFTER sc_device_number;
+
+ALTER TABLE cb_secret_key ADD sc_last_login_time datetime COMMENT '最后登录时间' AFTER sc_create_time;
+
+drop table if exists cb_character_replace_rule;
+
+/*==============================================================*/
+/* Table: cb_character_replace_rule                             */
+/*==============================================================*/
+create table cb_character_replace_rule
+(
+   crr_id               varchar(32) not null comment '规则id',
+   crr_rule_name        varchar(255) comment '规则名称',
+   crr_ws_id            varchar(32) comment '网站id',
+   crr_enable           tinyint comment '是否可用',
+   crr_create_id        varchar(32) comment '创建人',
+   crr_create_time      datetime comment '创建时间',
+   primary key (crr_id)
+);
+
+alter table cb_character_replace_rule comment '字符替换规则';
+drop table if exists cb_character_replace_rule_item;
+
+/*==============================================================*/
+/* Table: cb_character_replace_rule_item                        */
+/*==============================================================*/
+create table cb_character_replace_rule_item
+(
+   crri_id              varchar(32) not null comment '子规则id',
+   crri_crr_id          varchar(32) comment '规则id',
+   crri_origin_character varchar(255) comment '原字符',
+   crri_new_character   varchar(255) comment '新字符',
+   crri_create_id       varchar(32) comment '创建人',
+   crri_create_time     datetime comment '创建时间',
+   primary key (crri_id)
+);
+
+alter table cb_character_replace_rule_item comment '字符替换子规则';
+drop table if exists cb_user_download_record;
+
+/*==============================================================*/
+/* Table: cb_user_download_record                               */
+/*==============================================================*/
+create table cb_user_download_record
+(
+   udr_id               varchar(32) not null comment '下载记录id',
+   udr_token_id         varchar(32) comment 'token id',
+   udr_ws_id            varchar(32) comment '网站id',
+   udr_image_count      int comment '下载数量',
+   udr_keyword          varchar(255) comment '搜索关键字',
+   udr_search_url       varchar(255) comment '搜索url',
+   udr_create_time      datetime comment '创建时间',
+   primary key (udr_id)
+);
+
+alter table cb_user_download_record comment '用户下载记录';
+
+drop table if exists cb_image_data_info;
+
+/*==============================================================*/
+/* Table: cb_image_data_info                                    */
+/*==============================================================*/
+create table cb_image_data_info
+(
+   idi_id               varchar(32) not null comment 'id',
+   idi_udr_id           varchar(32) comment '下载记录id',
+   idi_image_id         varchar(100) comment '图片id',
+   idi_image_title      varchar(255) comment '图片标题',
+   idi_image_url        varchar(255) comment '图片链接',
+   idi_product_url      varchar(255) comment '产品链接',
+   idi_token_id         varchar(32) comment 'token id',
+   idi_create_time      datetime comment '创建时间',
+   primary key (idi_id)
+);
+
+alter table cb_image_data_info comment '图片数据信息';
+
+ALTER TABLE cb_security_object ADD so_token_id  varchar(32) COMMENT 'tokenId' AFTER so_token;
+
+

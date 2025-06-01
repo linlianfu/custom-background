@@ -20,10 +20,17 @@ public class SecurityObject {
     @TableId(value = "so_id",type = IdType.ASSIGN_UUID)
     private String id;
 
+    /**
+     * @see SecurityObject#getTokenId()
+     */
+    @Deprecated
     @TableField(value = "so_token")
     @ApiModelProperty(value = "密钥")
     private String token;
 
+    @TableField(value = "so_token_id")
+    @ApiModelProperty(value = "tokenId")
+    private String tokenId;
 
     /**
      * @see me.zhengjie.modules.secretkey.domain.SecurityObjectType

@@ -27,6 +27,10 @@ import me.zhengjie.annotation.rest.AnonymousGetMapping;
 import me.zhengjie.annotation.rest.AnonymousPostMapping;
 import me.zhengjie.config.RsaProperties;
 import me.zhengjie.exception.BadRequestException;
+import me.zhengjie.modules.characterReplaceRule.service.ICharacterReplaceRuleService;
+import me.zhengjie.modules.characterReplaceRule.service.dto.CharacterReplaceRuleBaseDto;
+import me.zhengjie.modules.secretkey.domain.SecurityObject;
+import me.zhengjie.modules.secretkey.domain.SecurityObjectType;
 import me.zhengjie.modules.secretkey.service.SecretKeyService;
 import me.zhengjie.modules.secretkey.service.dto.SecretKeyDto;
 import me.zhengjie.modules.security.config.bean.LoginCodeEnum;
@@ -43,6 +47,7 @@ import me.zhengjie.modules.website.domain.vo.WebsiteCriteria;
 import me.zhengjie.modules.website.service.IProductCategoryService;
 import me.zhengjie.modules.website.service.IWebsiteService;
 import me.zhengjie.modules.website.service.ImageParseAuthService;
+import me.zhengjie.modules.website.service.dto.FieldValueDto;
 import me.zhengjie.modules.website.service.dto.ImageParseBaseVo;
 import me.zhengjie.modules.website.service.dto.ImageParseVo;
 import me.zhengjie.modules.website.service.dto.ProductCategoryDto;
@@ -71,6 +76,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -104,13 +110,16 @@ public class AuthorizationController {
     @Resource
     private LoginProperties loginProperties;
     @Autowired
-    private IWebsiteService IWebsiteService;
+    private IWebsiteService websiteService;
 
     @Autowired
     private ImageParseAuthService imageParseAuthService;
 
     @Autowired
     private IProductCategoryService productCategoryService;
+
+    @Autowired
+    private ICharacterReplaceRuleService characterReplaceRule;
 
     @Log("用户登录")
     @ApiOperation("登录授权")
@@ -247,12 +256,17 @@ public class AuthorizationController {
         }else {
             secretKeyService.bindToken(token,deviceNumber);
         }
+        secretKeyService.updateLastLoginTime(secret.getId(),new Date());
         result.setSuccess(true);
+        result.setTokenId(secret.getId());
         result.setIdentityType(secret.getIdentityType());
+        //获取安全对象并转化前端可识别的格式
+        List<SecurityObject> permissionGroupList = secretKeyService.getPermissionGroup(secret.getId(), SecurityObjectType.VIEW);
+        result.setPermissionGroup(secretKeyService.convertSecurityObject(permissionGroupList));
         if (CollectionUtils.isNotEmpty(secret.getWebType())){
             WebsiteCriteria criteria = new WebsiteCriteria();
             criteria.setCodeList(secret.getWebType());
-            List<WebsiteVo> websiteVoList = IWebsiteService.listWebsite(criteria);
+            List<WebsiteVo> websiteVoList = websiteService.listWebsite(criteria);
             List<WebsiteAndImageParseVo> website = ModelMapperUtils.mapList(websiteVoList,WebsiteAndImageParseVo.class);
 
             List<UserImageParseVo> authImageParse = imageParseAuthService.findAuthImageParse(secret.getId());
@@ -274,6 +288,12 @@ public class AuthorizationController {
 
                     List<ProductCategoryDto> productCategory = productCategoryService.findProductCategory(websiteAndImageParseVo.getId());
                     websiteAndImageParseVo.setProductCategory(productCategory);
+
+                    List<CharacterReplaceRuleBaseDto> rule = characterReplaceRule.getCharacterReplaceRuleByWebsiteId(websiteAndImageParseVo.getId());
+                    websiteAndImageParseVo.setCharacterReplaceRules(rule);
+
+                    List<FieldValueDto> sortFieldValue = websiteService.getSortFieldValue(websiteAndImageParseVo.getId());
+                    websiteAndImageParseVo.setSortFieldValue(sortFieldValue);
                 }
             }
             result.setWebsite(website);

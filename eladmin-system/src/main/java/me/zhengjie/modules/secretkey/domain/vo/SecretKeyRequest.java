@@ -3,6 +3,7 @@ package me.zhengjie.modules.secretkey.domain.vo;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import me.zhengjie.modules.secretkey.domain.IdentityType;
+import me.zhengjie.modules.secretkey.service.dto.PermissionGroup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,9 @@ public class SecretKeyRequest {
     private List<String> webType = new ArrayList<>();
 
     private String deviceNumber;
+
+    @ApiModelProperty(value = "安全对象内容")
+    private PermissionGroup permissionGroup;
 
     @ApiModelProperty(value = "授权的图片解析资源")
     private List<String> authImageParseId;

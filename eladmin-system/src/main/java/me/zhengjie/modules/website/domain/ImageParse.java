@@ -13,15 +13,6 @@ import java.util.Date;
  *
  * @author eleven
  *
- * CREATE TABLE `cb_image_parse` (
- *   `ip_id` varchar(32) NOT NULL COMMENT '地址id',
- *   `ip_ws_id` varchar(32) DEFAULT NULL COMMENT '解析的网站',
- *   `ip_parse_url` varchar(255) DEFAULT NULL COMMENT '解析地址',
- *   `ip_parse_type` tinyint(4) DEFAULT NULL COMMENT '解析类型 | 1 PNG | 2 JPG',
- *   `ip_create_id` varchar(32) DEFAULT NULL COMMENT '创建人',
- *   `ip_create_time` datetime DEFAULT NULL COMMENT '创建时间',
- *   PRIMARY KEY (`ip_id`)
- * ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='图片解析地址';
  */
 @Data
 @TableName("cb_image_parse")

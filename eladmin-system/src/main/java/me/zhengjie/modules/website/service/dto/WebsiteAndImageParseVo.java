@@ -2,6 +2,7 @@ package me.zhengjie.modules.website.service.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import me.zhengjie.modules.characterReplaceRule.service.dto.CharacterReplaceRuleBaseDto;
 
 import java.util.List;
 
@@ -19,5 +20,11 @@ public class WebsiteAndImageParseVo extends WebsiteVo{
 
     @ApiModelProperty(value = "网站产品分类")
     private List<ProductCategoryDto> productCategory;
+
+    @ApiModelProperty(value = "字符替换规则")
+    private List<CharacterReplaceRuleBaseDto> characterReplaceRules;
+
+    @ApiModelProperty(value = "排序字段值")
+    private List<FieldValueDto> sortFieldValue;
 }
 

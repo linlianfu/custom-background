@@ -2,6 +2,7 @@ package me.zhengjie.modules.security.config.bean;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import me.zhengjie.modules.secretkey.service.dto.PermissionGroup;
 import me.zhengjie.modules.website.service.dto.WebsiteAndImageParseVo;
 
 import java.util.List;
@@ -18,6 +19,12 @@ public class LoginResult {
 
     @ApiModelProperty(value = "身份标识 | 1管理员，2 员工")
     private int identityType;
+
+    @ApiModelProperty(value = "登录着tokenId")
+    private String tokenId;
+
+    @ApiModelProperty(value = "权限组")
+    private PermissionGroup permissionGroup;
 
     @ApiModelProperty(value = "已授权的网站")
     private List<WebsiteAndImageParseVo> website;

@@ -1,5 +1,6 @@
 package me.zhengjie.modules.website.service.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -8,12 +9,13 @@ import lombok.Data;
  */
 @Data
 public class ProductCategoryDto {
-    /**
-     * 产品code
-     */
+
+    @ApiModelProperty(value = "分类id")
+    private String id;
+
+    @ApiModelProperty(value = "产品code")
     private String code;
-    /**
-     * 产品名称
-     */
+
+    @ApiModelProperty(value = "产品名称")
     private String name;
 }
