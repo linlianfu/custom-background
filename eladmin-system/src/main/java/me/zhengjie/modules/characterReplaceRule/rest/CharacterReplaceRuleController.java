@@ -77,4 +77,12 @@ public class CharacterReplaceRuleController {
         service.deleteById(ids);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PutMapping("/updateStatus")
+    @Log("更新状态")
+    @ApiOperation("更新状态SecretKey")
+    public ResponseEntity<Object> updateStatus(String id) {
+        service.updateStatus(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

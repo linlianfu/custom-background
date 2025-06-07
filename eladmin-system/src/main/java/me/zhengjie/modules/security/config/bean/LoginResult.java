@@ -29,5 +29,8 @@ public class LoginResult {
     @ApiModelProperty(value = "已授权的网站")
     private List<WebsiteAndImageParseVo> website;
 
+    @ApiModelProperty(value = "登录着tokenId")
+    private String errMessage;
+
 
 }

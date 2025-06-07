@@ -24,6 +24,10 @@ public class ImageDataInfo {
     @ApiModelProperty(value = "下载记录id")
     private String downloadRecordId;
 
+    @TableField(value = "idi_ws_id")
+    @ApiModelProperty(value = "网站id")
+    private String websiteId;
+
     @TableField(value = "idi_image_id")
     @ApiModelProperty(value = "图片id")
     private String imageId;

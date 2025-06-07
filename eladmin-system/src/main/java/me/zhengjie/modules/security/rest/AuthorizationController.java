@@ -243,14 +243,17 @@ public class AuthorizationController {
         LoginResult  result = new LoginResult();
 
         SecretKeyDto secret = secretKeyService.getToken(token);
-        if (secret == null)
+        if (secret == null){
+            result.setErrMessage("token不存在或停用");
             return result;
+        }
         String tokenDeviceNumber = secret.getDeviceNumber();
         if (StringUtils.isNotBlank(tokenDeviceNumber)){
             if (deviceNumber.equals(tokenDeviceNumber)){
                 result.setSuccess(true);
             }else {
                 log.warn("token错误，与绑定的设备不一致");
+                result.setErrMessage("token错误，与绑定的设备不一致");
                 return result;
             }
         }else {
@@ -289,7 +292,7 @@ public class AuthorizationController {
                     List<ProductCategoryDto> productCategory = productCategoryService.findProductCategory(websiteAndImageParseVo.getId());
                     websiteAndImageParseVo.setProductCategory(productCategory);
 
-                    List<CharacterReplaceRuleBaseDto> rule = characterReplaceRule.getCharacterReplaceRuleByWebsiteId(websiteAndImageParseVo.getId());
+                    List<CharacterReplaceRuleBaseDto> rule = characterReplaceRule.getCharacterReplaceRuleByWebsiteId(websiteAndImageParseVo.getId(),true);
                     websiteAndImageParseVo.setCharacterReplaceRules(rule);
 
                     List<FieldValueDto> sortFieldValue = websiteService.getSortFieldValue(websiteAndImageParseVo.getId());

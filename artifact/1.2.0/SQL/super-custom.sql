@@ -120,5 +120,6 @@ create table cb_image_data_info
 alter table cb_image_data_info comment '图片数据信息';
 
 ALTER TABLE cb_security_object ADD so_token_id  varchar(32) COMMENT 'tokenId' AFTER so_token;
+ALTER TABLE cb_image_data_info ADD idi_ws_id  varchar(32) COMMENT '网站id' AFTER idi_udr_id;
 
 

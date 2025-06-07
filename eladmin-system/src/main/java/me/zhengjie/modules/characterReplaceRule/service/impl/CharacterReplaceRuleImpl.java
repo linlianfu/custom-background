@@ -52,9 +52,10 @@ public class CharacterReplaceRuleImpl extends ServiceImpl<CharacterReplaceRuleMa
     private WebsiteMapper websiteMapper;
 
     @Override
-    public List<CharacterReplaceRuleBaseDto> getCharacterReplaceRuleByWebsiteId(String websiteId) {
+    public List<CharacterReplaceRuleBaseDto> getCharacterReplaceRuleByWebsiteId(String websiteId,boolean enable) {
         List<CharacterReplaceRule> characterReplaceRules = mapper.selectList(
-                Wrappers.lambdaQuery(CharacterReplaceRule.class).in(CharacterReplaceRule::getWebsiteId, websiteId)
+                Wrappers.lambdaQuery(CharacterReplaceRule.class).eq(CharacterReplaceRule::getWebsiteId, websiteId)
+                .eq(CharacterReplaceRule::isEnable,enable)
         );
         List<CharacterReplaceRuleBaseDto> result = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(characterReplaceRules)){
@@ -184,6 +185,14 @@ public class CharacterReplaceRuleImpl extends ServiceImpl<CharacterReplaceRuleMa
         createCharacterReplaceRuleItem(request.getId(),request.getRuleItem());
 
         return characterReplaceRule;
+    }
+
+
+    @Override
+    public void updateStatus(String id){
+        CharacterReplaceRule characterReplaceRule = mapper.selectById(id);
+        characterReplaceRule.setEnable(!characterReplaceRule.isEnable());
+        mapper.updateById(characterReplaceRule);
     }
 
     @Override

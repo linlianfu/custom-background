@@ -20,7 +20,7 @@ public interface ICharacterReplaceRuleService {
      * @param websiteId
      * @return
      */
-    List<CharacterReplaceRuleBaseDto> getCharacterReplaceRuleByWebsiteId(String websiteId);
+    List<CharacterReplaceRuleBaseDto> getCharacterReplaceRuleByWebsiteId(String websiteId,boolean enable);
     /**
      * 获取指定的字符替换规则
      * @param id
@@ -49,6 +49,11 @@ public interface ICharacterReplaceRuleService {
      */
     CharacterReplaceRule updateRule(CharacterReplaceRuleRequest request);
 
+    /**
+     * 更新规则状态
+     * @param ids
+     */
+    void updateStatus(String ids);
     /**
      * 删除id
      * @param id

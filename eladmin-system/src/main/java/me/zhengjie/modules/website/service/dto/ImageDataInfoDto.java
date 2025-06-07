@@ -37,4 +37,7 @@ public class ImageDataInfoDto {
 
     @ApiModelProperty(value = "创建时间")
     private Date createTime;
+
+    @ApiModelProperty(value = "网站信息")
+    private WebsiteVo website;
 }
