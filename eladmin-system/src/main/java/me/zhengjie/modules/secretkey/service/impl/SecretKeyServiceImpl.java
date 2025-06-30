@@ -55,7 +55,6 @@ public class SecretKeyServiceImpl extends ServiceImpl<SecretKeyMapper, SecretKey
     private ImageParseMapper imageParseMapper;
 
 
-
     @Override
     public SecretKeyDto getToken(String token) {
         Assert.hasText(token,"密钥不能为空");
@@ -75,7 +74,7 @@ public class SecretKeyServiceImpl extends ServiceImpl<SecretKeyMapper, SecretKey
         dto.setDeviceNumber(key.getDeviceNumber());
         dto.setEnable(key.isEnable());
         dto.setExpirationDate(key.getExpirationDate());
-        dto.setWebType(getWebTypeByToken(token));
+        dto.setWebType(getWebTypeByToken(key.getId()));
         return dto;
     }
 
@@ -136,7 +135,7 @@ public class SecretKeyServiceImpl extends ServiceImpl<SecretKeyMapper, SecretKey
 
         List<SecretKeyVo> list = ModelMapperUtils.mapList(dbPage.getRecords(), SecretKeyVo.class);
         list.forEach(p->{
-            p.setWebType(getWebTypeByToken(p.getSecretKey()));
+            p.setWebType(getWebTypeByToken(p.getId()));
             List<UserImageParseVo> authImageParse = imageParseAuthService.findAuthImageParse(p.getId());
             List<ImageParseVo> imageParseVos = ModelMapperUtils.mapList(
                     authImageParse.stream().filter(p1 -> p1.getType() == 2
@@ -177,7 +176,7 @@ public class SecretKeyServiceImpl extends ServiceImpl<SecretKeyMapper, SecretKey
         save(record);
 
         if (CollectionUtils.isNotEmpty(request.getWebType())){
-            request.getWebType().forEach(p->createObject(record.getSecretKey(),SecurityObjectType.WEB,p));
+            request.getWebType().forEach(p->createObject(SecurityObjectType.WEB,record.getId(),p));
         }
 
         PermissionGroup permissionGroup = request.getPermissionGroup();
@@ -216,15 +215,10 @@ public class SecretKeyServiceImpl extends ServiceImpl<SecretKeyMapper, SecretKey
         updateById(secretKey);
 
         securityObjectMapper.delete(Wrappers.lambdaQuery(SecurityObject.class)
-                .eq(SecurityObject::getToken,secretKey.getSecretKey())
-                .eq(SecurityObject::getType, SecurityObjectType.WEB));
-
-        securityObjectMapper.delete(Wrappers.lambdaQuery(SecurityObject.class)
-                .eq(SecurityObject::getTokenId,secretKey.getId())
-                .eq(SecurityObject::getType, SecurityObjectType.VIEW));
+                .eq(SecurityObject::getTokenId,secretKey.getId()));
 
         if (CollectionUtils.isNotEmpty(request.getWebType())){
-            request.getWebType().forEach(p->createObject(secretKey.getSecretKey(),SecurityObjectType.WEB,p));
+            request.getWebType().forEach(p->createObject(SecurityObjectType.WEB,request.getId(),p));
         }
 
         PermissionGroup permissionGroup = request.getPermissionGroup();
@@ -247,13 +241,9 @@ public class SecretKeyServiceImpl extends ServiceImpl<SecretKeyMapper, SecretKey
     public boolean deleteById(List<String> idList) {
         for (String id : idList) {
             SecretKey secretKey = secretKeyMapper.selectById(id);
-            securityObjectMapper.delete(Wrappers.lambdaQuery(SecurityObject.class)
-                    .eq(SecurityObject::getToken,secretKey.getSecretKey())
-                    .eq(SecurityObject::getType, SecurityObjectType.WEB));
 
             securityObjectMapper.delete(Wrappers.lambdaQuery(SecurityObject.class)
-                    .eq(SecurityObject::getTokenId,secretKey.getId())
-                    .eq(SecurityObject::getType, SecurityObjectType.VIEW));
+                    .eq(SecurityObject::getTokenId,secretKey.getId()));
 
             secretKeyMapper.deleteById(id);
             imageParseAuthService.cancelAuthImageParseByTokenId(id);
@@ -273,10 +263,10 @@ public class SecretKeyServiceImpl extends ServiceImpl<SecretKeyMapper, SecretKey
     }
 
     @Override
-    public List<String> getWebTypeByToken(String token) {
+    public List<String> getWebTypeByToken(String tokenId) {
         List<String> webList = new ArrayList<>();
         LambdaQueryWrapper<SecurityObject> wrapper = Wrappers.lambdaQuery(SecurityObject.class)
-                .eq(SecurityObject::getToken,token)
+                .eq(SecurityObject::getTokenId,tokenId)
                 .eq(SecurityObject::getType, SecurityObjectType.WEB);
         List<SecurityObject> list = securityObjectMapper.selectList(wrapper);
 
@@ -314,14 +304,15 @@ public class SecretKeyServiceImpl extends ServiceImpl<SecretKeyMapper, SecretKey
         return permissionGroup;
     }
 
-    private void createObject(String token, int type, String content){
-        SecurityObject object = new SecurityObject();
-        object.setToken(token);
-        object.setType(type);
-        object.setContent(content);
-        object.setCreateTime(new Date());
-        securityObjectMapper.insert(object);
+
+    @Override
+    public boolean resetDeviceNumber(String tokenId) {
+        SecretKey secretKey = secretKeyMapper.selectById(tokenId);
+        secretKey.setDeviceNumber(null);
+        secretKeyMapper.updateById(secretKey);
+        return true;
     }
+
 
     private void createObject(int type,String tokenId,String content){
         SecurityObject object = new SecurityObject();

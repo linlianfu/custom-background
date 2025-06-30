@@ -238,7 +238,7 @@ public class AuthorizationController {
         String token = request.getToken();
 
         String deviceNumber = request.getDeviceNumber();
-        log.info("token:"+token+",deviceNumber:"+deviceNumber);
+        log.warn("token:"+token+",deviceNumber:"+deviceNumber);
 
         LoginResult  result = new LoginResult();
 

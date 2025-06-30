@@ -81,7 +81,7 @@ public interface SecretKeyService {
      * @param token
      * @return
      */
-    List<String> getWebTypeByToken(String token);
+    List<String> getWebTypeByToken(String tokenId);
 
 
     /**
@@ -108,4 +108,12 @@ public interface SecretKeyService {
      * @return
      */
      PermissionGroup convertSecurityObject(List<SecurityObject> securityObjectList);
+
+
+    /**
+     * 重置设备号
+     * @param tokenId
+     * @return
+     */
+     boolean resetDeviceNumber(String tokenId);
 }

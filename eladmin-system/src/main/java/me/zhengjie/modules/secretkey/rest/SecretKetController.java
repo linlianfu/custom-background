@@ -69,6 +69,19 @@ public class SecretKetController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    /**
+     * 重置设备
+     * @param tokenId
+     * @return
+     */
+    @PutMapping("/resetDeviceNumber")
+    @Log("重置设备")
+    @ApiOperation("重置设备")
+    public ResponseEntity<Object> resetDeviceNumber(String id){
+        service.resetDeviceNumber(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @DeleteMapping
     @Log("删除SecretKey")
     @ApiOperation("删除SecretKey")
@@ -76,6 +89,7 @@ public class SecretKetController {
         service.deleteById(ids);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
     @PutMapping("/updateStatus")
     @Log("更新状态")
     @ApiOperation("更新状态SecretKey")
