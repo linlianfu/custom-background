@@ -13,14 +13,6 @@ import java.util.Date;
  *
  * @author eleven
  *
- * CREATE TABLE `cb_website` (
- *   `ws_id` varchar(32) NOT NULL COMMENT '网站id',
- *   `ws_code` varchar(255) DEFAULT NULL COMMENT '网站标识',
- *   `ws_address` varchar(255) DEFAULT NULL COMMENT '网站地址',
- *   `ws_create_id` varchar(32) DEFAULT NULL COMMENT '创建人',
- *   `ws_create_time` datetime DEFAULT NULL COMMENT '创建时间',
- *   PRIMARY KEY (`ws_id`)
- * ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='网站管理';
  */
 @Data
 @TableName("cb_website")

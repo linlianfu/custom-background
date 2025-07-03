@@ -122,4 +122,23 @@ alter table cb_image_data_info comment '图片数据信息';
 ALTER TABLE cb_security_object ADD so_token_id  varchar(32) COMMENT 'tokenId' AFTER so_token;
 ALTER TABLE cb_image_data_info ADD idi_ws_id  varchar(32) COMMENT '网站id' AFTER idi_udr_id;
 
+drop table if exists cb_product_category;
+
+/*==============================================================*/
+/* Table: cb_product_category                                   */
+/*==============================================================*/
+create table cb_product_category
+(
+   pc_category_id       varchar(32) comment '分类id',
+   pc_ws_id             varchar(32) comment '所属网站',
+   pc_category_code     varchar(255) comment '分类标识',
+   pc_category_name     varchar(255) comment '分类名称',
+   pc_enable            tinyint comment '是否可用',
+   pc_create_id         varchar(32) comment '创建人',
+   pc_create_time       datetime comment '创建时间'
+);
+
+alter table cb_product_category comment '网站产品分类 - 类目';
+
+
 

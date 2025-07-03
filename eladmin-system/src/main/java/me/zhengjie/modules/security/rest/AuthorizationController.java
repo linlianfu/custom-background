@@ -289,7 +289,7 @@ public class AuthorizationController {
                     List<ImageParseBaseVo> imageParses1 = ModelMapperUtils.mapList(collect1,ImageParseBaseVo.class);
                     websiteAndImageParseVo.setPreviewImageParse(imageParses1);
 
-                    List<ProductCategoryDto> productCategory = productCategoryService.findProductCategory(websiteAndImageParseVo.getId());
+                    List<ProductCategoryDto> productCategory = productCategoryService.findProductCategory(websiteAndImageParseVo.getId(),true);
                     websiteAndImageParseVo.setProductCategory(productCategory);
 
                     List<CharacterReplaceRuleBaseDto> rule = characterReplaceRule.getCharacterReplaceRuleByWebsiteId(websiteAndImageParseVo.getId(),true);
